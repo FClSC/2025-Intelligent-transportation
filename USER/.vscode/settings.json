@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "contral_claw.h": "c",
+        "system_init.h": "c",
+        "contral.h": "c",
+        "sys.h": "c",
+        "stm32f10x.h": "c"
+    },
+    "C_Cpp.default.compilerPath": "D:\\mingw64\\bin\\gcc.exe"
+}
