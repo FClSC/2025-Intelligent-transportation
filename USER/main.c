@@ -52,11 +52,6 @@ int main(void)
            OLED_ShowString(0,0,UART5_RX_BUF,6);
 			OLED_Update();
 		}
-		
-
-
-		// uint8_t Array[]="123+321";
-		// UART1_SendString(Array);
 
 
 
