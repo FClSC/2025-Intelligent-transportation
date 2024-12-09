@@ -1,5 +1,5 @@
 Dependencies for Project 'Template', Target 'Template': (DO NOT MODIFY !)
-F (.\main.c)(0x6756E843)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\STM32F10x_FWLib\inc -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\HARDWARE\KEY -I ..\HARDWARE\LED -I ..\HARDWARE\MOTOR -I ..\HARDWARE\CONTRAL -I ..\HARDWARE\OLED -I ..\HARDWARE\UART -I ..\HARDWARE\SYSTEM_INIT -I ..\HARDWARE\SERVO -I ..\HARDWARE\COUNT -I ..\HARDWARE\CONTRAL_CLAW -I ..\HARDWARE\WS2812-I.\RTE\_Template-ID:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include-ID:\Keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\main.o --omf_browse ..\obj\main.crf --depend ..\obj\main.d)
+F (.\main.c)(0x67570243)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\STM32F10x_FWLib\inc -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\HARDWARE\KEY -I ..\HARDWARE\LED -I ..\HARDWARE\MOTOR -I ..\HARDWARE\CONTRAL -I ..\HARDWARE\OLED -I ..\HARDWARE\UART -I ..\HARDWARE\SYSTEM_INIT -I ..\HARDWARE\SERVO -I ..\HARDWARE\COUNT -I ..\HARDWARE\CONTRAL_CLAW -I ..\HARDWARE\WS2812-I.\RTE\_Template-ID:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include-ID:\Keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\main.o --omf_browse ..\obj\main.crf --depend ..\obj\main.d)
 I (..\HARDWARE\SYSTEM_INIT\system_init.h)(0x67470E2C)
 I (..\SYSTEM\sys\sys.h)(0x550F951A)
 I (..\USER\stm32f10x.h)(0x4D783CB6)
@@ -869,7 +869,7 @@ I (..\STM32F10x_FWLib\inc\stm32f10x_tim.h)(0x4D783BB4)
 I (..\STM32F10x_FWLib\inc\stm32f10x_usart.h)(0x504F4160)
 I (..\STM32F10x_FWLib\inc\misc.h)(0x4D783BB4)
 F (..\README.TXT)(0x674E76F5)()
-F (..\README.md)(0x674E7C33)()
+F (..\README.md)(0x67570076)()
 F (..\HARDWARE\MOTOR\motor.c)(0x6755A2AC)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\STM32F10x_FWLib\inc -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\HARDWARE\KEY -I ..\HARDWARE\LED -I ..\HARDWARE\MOTOR -I ..\HARDWARE\CONTRAL -I ..\HARDWARE\OLED -I ..\HARDWARE\UART -I ..\HARDWARE\SYSTEM_INIT -I ..\HARDWARE\SERVO -I ..\HARDWARE\COUNT -I ..\HARDWARE\CONTRAL_CLAW -I ..\HARDWARE\WS2812-I.\RTE\_Template-ID:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include-ID:\Keil5\ARM\CMSIS\Include-D__UVISION_VERSION="524" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\motor.o --omf_browse ..\obj\motor.crf --depend ..\obj\motor.d)
 I (..\HARDWARE\MOTOR\motor.h)(0x64BF3226)
 I (..\HARDWARE\SYSTEM_INIT\system_init.h)(0x67470E2C)
