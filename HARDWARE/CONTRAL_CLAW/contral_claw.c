@@ -9,7 +9,7 @@ CLAW_POSITION claw;
 直径 16mm 
 转一圈  8*2*3.14=50.24 
 x/mm = 3200/50.24
-x = 64*mm
+x = 64*mm   1mm需要64个脉冲
 **********************/
 void claw_position(int16_t position)
 {

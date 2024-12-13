@@ -3,7 +3,7 @@
 
 #include "system_init.h"
 
-#define claw_most_up    180   // 280mm      64*170 = 10880脉冲         升到最高的位置            
+#define claw_most_up    150   // 280mm      64*170 = 10880脉冲         升到最高的位置            
 
 #define camera_position 0  // 140mm      64*140 = 8960脉冲          扫码的位置
 

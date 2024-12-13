@@ -81,9 +81,9 @@ void MSD_Move(signed int step, unsigned int accel, unsigned int decel, unsigned 
      }
     else if(step != 0)
     {
-				accel = accel*100; 
-				decel = decel*100;
-				speed = speed*100;
+			accel = accel*100; 
+			decel = decel*100;
+			speed = speed*100;
 			srd.min_delay = A_T_x100 / speed;
 			srd.step_delay = (T1_FREQ_148 * sqrt(A_SQ / accel))/100;
 			// 计算多少步之后达到最大速度的限制
@@ -161,7 +161,7 @@ void MSD_Move1(signed int step, unsigned int accel, unsigned int decel, unsigned
         srd1.step_delay = 1000;
         TIM_SetAutoreload(TIM2,Pulse_width);
         TIM_SetCompare3(TIM2,Pulse_width_comper); 
-				TIM_SetCompare4(TIM2,Pulse_width_comper); 
+		TIM_SetCompare4(TIM2,Pulse_width_comper); //这一步没必要
         TIM_Cmd(TIM2, ENABLE); 
      }
     else if(step != 0)
@@ -245,7 +245,7 @@ void MSD_Move2(signed int step, unsigned int accel, unsigned int decel, unsigned
         srd2.step_delay = 1000;
         TIM_SetAutoreload(TIM4,Pulse_width);
         TIM_SetCompare3(TIM4,Pulse_width_comper); 
-				TIM_SetCompare4(TIM4,Pulse_width_comper); 
+		TIM_SetCompare4(TIM4,Pulse_width_comper); //这一步没必要,2024/12/10
         TIM_Cmd(TIM4, ENABLE); 
      }
     else if(step != 0)
@@ -984,7 +984,7 @@ void claw_down2(void)
 **********************/
 void claw_open(void)
 {
-		servo_angle2=76;
+		servo_angle2=0;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
@@ -998,7 +998,7 @@ void claw_open(void)
 **********************/
 void claw_close(void)
 {
-		servo_angle2=100;
+		servo_angle2=30;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
@@ -1026,7 +1026,7 @@ void claw_open1(void)
 **********************/
 void claw_turn0(void)
 {
-		servo_angle3=17;					//56
+		servo_angle3=0;					//56
 		SERVO3_CONTRAL(servo_angle3);      //56
 }
 
@@ -1043,13 +1043,13 @@ void claw_turn129(void)
 }
 
 /********************
-函数功能 : 爪子旋转到位置一
+函数功能 : 爪子旋转到转盘正上方
 输入参数 : 无
 输出参数 ：无
 **********************/
 void claw_turn1(void)
 {
-		servo_angle3 = 110;
+		servo_angle3 = 147;
 		SERVO3_CONTRAL(servo_angle3);
 }
 /********************
