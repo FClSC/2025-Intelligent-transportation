@@ -78,9 +78,9 @@ void claw_position2(int16_t position)
 	}
 }
 
-
+////////////////////////////////////////////////////////////爪子高度
 /********************
-函数功能 : 到达摄像头的位置
+函数功能 : 到达摄像头扫码的位置
 输入参数 : 无
 输出参数 ：无
 **********************/
@@ -90,20 +90,45 @@ void arrive_camera(void)
 	claw.position_temp = claw.position_target - claw.position_now;
 	claw_position(claw.position_temp);
 }
+
 /********************
-函数功能 : 到达摄像头的位置
+函数功能 : 到达最高处
 输入参数 : 无
 输出参数 ：无
-是否结束由外部控制
 **********************/
-void arrive_camera2(void)
+void arrive_most_up(void)
 {
-	claw.position_target = camera_position;
+	claw.position_target = claw_most_up;
 	claw.position_temp = claw.position_target - claw.position_now;
-	claw_position2(claw.position_temp);
+	claw_position(claw.position_temp);
 }
+
 /********************
-函数功能 : 到达抓物料块的位置 从物料台抓物块的高度
+函数功能 : 到达地面抓物块的高度
+输入参数 : 无
+输出参数 ：无
+**********************/
+void arrive_block_get(void)
+{
+	claw.position_target = claw_block_get;
+	claw.position_temp = claw.position_target - claw.position_now;
+	claw_position(claw.position_temp);
+}
+
+/********************
+函数功能 : 到达地面放物块的高度
+输入参数 : 无
+输出参数 ：无
+**********************/
+void arrive_block_put(void)
+{
+	claw.position_target = put_block_down;
+	claw.position_temp = claw.position_target - claw.position_now;
+	claw_position(claw.position_temp);
+}
+
+/********************
+函数功能 : 到达从物料盘抓物块的高度
 输入参数 : 无
 输出参数 ：无
 **********************/
@@ -114,46 +139,26 @@ void arrive_block_get1(void)
 	claw_position(claw.position_temp);
 }
 
+
 /********************
-函数功能 : 到达抓物料块的位置
+函数功能 : 到达在车上放物块的高度
 输入参数 : 无
 输出参数 ：无
 **********************/
-void arrive_block_get(void)
+void arrive_car_put(void)
 {
-	claw.position_target = claw_block_get;//地面高度
+	claw.position_target = claw_block_put;
 	claw.position_temp = claw.position_target - claw.position_now;
 	claw_position(claw.position_temp);
 }
 
+
 /********************
-函数功能 : 到达把物块叠起来第二层的高度
+函数功能 : 到达车上抓物块的高度
 输入参数 : 无
 输出参数 ：无
 **********************/
-void arrive_block_putF2(void)
-{
-	claw.position_target = claw_block_get2;  //物块第二层
-	claw.position_temp = claw.position_target - claw.position_now;
-	claw_position(claw.position_temp);
-}
-/********************
-函数功能 : 到达抓物料块的位置 第二层
-输入参数 : 无
-输出参数 ：无
-**********************/
-void arrive_block_get3(void)
-{
-	claw.position_target = claw_block_get3;
-	claw.position_temp = claw.position_target - claw.position_now;
-	claw_position(claw.position_temp);
-}
-/********************
-函数功能 : 到达放物料块的位置
-输入参数 : 无
-输出参数 ：无
-**********************/
-void arrive_block_put(void)
+void arrive_car_get(void)
 {
 	claw.position_target = get_block_down;
 	claw.position_temp = claw.position_target - claw.position_now;
@@ -161,52 +166,19 @@ void arrive_block_put(void)
 }
 
 /********************
-函数功能 : 到达放物料块的位置  放第二层
+函数功能 : 到达物块放在第二层高度
 输入参数 : 无
 输出参数 ：无
 **********************/
-//void arrive_block_put2(void)
-//{
-//	claw.position_target = claw_block_put2;
-//	claw.position_temp = claw.position_target - claw.position_now;
-//	claw_position(claw.position_temp);
-//}
-///********************
-//函数功能 : 到达放物料块的位置  放第二层
-//输入参数 : 无
-//输出参数 ：无
-//**********************/
-//void arrive_block_put3(void)
-//{
-//	claw.position_target = claw_block_put3;
-//	claw.position_temp = claw.position_target - claw.position_now;
-//	claw_position(claw.position_temp);
-//}
-/********************
-函数功能 : 到达最顶端
-输入参数 : 无
-输出参数 ：无
-**********************/
-void arrive_most_up(void)
+void arrive_put_down2(void)
 {
-	claw.position_target = claw_most_up;
+	claw.position_target = put_block_down2;
 	claw.position_temp = claw.position_target - claw.position_now;
 	claw_position(claw.position_temp);
 }
-/********************
-函数功能 : 从转盘拿物料块放到车上的位置
-输入参数 : 无
-输出参数 ：无
-**********************/
-void arrive_block_down(void)
-{
-	claw.position_target = get_block_down;
-	claw.position_temp = claw.position_target - claw.position_now;
-	claw_position(claw.position_temp);	
-}
 
 /********************
-函数功能 : 到靶心识别的位置
+函数功能 : 到达靶心识别的高度
 输入参数 : 无
 输出参数 ：无
 **********************/
@@ -214,649 +186,138 @@ void arrive_circle_capture(void)
 {
 	claw.position_target = circle_capture1;
 	claw.position_temp = claw.position_target - claw.position_now;
-	claw_position(claw.position_temp);	
+	claw_position(claw.position_temp);
 }
-//void arrive2_circle_capture(void)
-//{
-//	claw.position_target = circle_capture1;
-//	claw.position_temp = claw.position_target - claw.position_now;
-//	claw_position2(claw.position_temp);	
-//}
+
 /********************
-函数功能 : 到物料盘靶心识别的位置2
+函数功能 : 到达物料盘识别颜色的高度
 输入参数 : 无
 输出参数 ：无
 **********************/
-void arrive_circle_capture2(void)
+void arrive_color_reco(void)
 {
 	claw.position_target = circle_capture2;
 	claw.position_temp = claw.position_target - claw.position_now;
-	claw_position(claw.position_temp);	
+	claw_position(claw.position_temp);
 }
-//void arrive2_circle_capture2(void)
-//{
-//	claw.position_target = circle_capture2;
-//	claw.position_temp = claw.position_target - claw.position_now;
-//	claw_position2(claw.position_temp);	
-//}
 
 
-///********************
-//函数功能 : 到达转盘识别黑色块的高度
-//输入参数 : 无
-//输出参数 ：无
-//**********************/
-//void arrive_circle_capture3(void)
-//{
-//	claw.position_target = circle_capture3;
-//	claw.position_temp = claw.position_target - claw.position_now;
-//	claw_position(claw.position_temp);	
-//}
-//void arrive2_circle_capture3(void)
-//{
-//	claw.position_target = circle_capture3;
-//	claw.position_temp = claw.position_target - claw.position_now;
-//	claw_position2(claw.position_temp);	
-////}
-///********************
-//函数功能 : 爪子把物块放到载物台   从转盘抓
-//输入参数 : 无
-//输出参数 ：无
-//**********************/
-//void claw_get_block(void)
-//{
-////	arrive_block_get();  //160
-////	delay_ms(200);
-//	claw_close(); 
-//	delay_ms(500);
-//	arrive_most_up();    //195 
-//	claw_turn129(); 
-//	delay_ms(200);
-//	delay_ms(500); 
-//	arrive_block_down(); //130 
-//	claw_open();
-//	delay_ms(500); 
-//	arrive_most_up();    //173 
-//	claw_turn0();
-//	delay_ms(200);
-//	delay_ms(500);
-//	support_turn120();
-//	delay_ms(100);
-//	arrive_block_get(); 
-//}
 
-///********************
-//函数功能 : 爪子把物块放到载物台   从地面抓
-//输入参数 : 无
-//输出参数 ：无
-//**********************/
-//void claw_get_block2(void)
-//{
-//	//claw_turn0();
-//	arrive_block_put();   //0
-//	claw_close();
-//	delay_ms(200);
-//	arrive_most_up();     //173
-//	delay_ms(200);
-//	claw_turn129();
-//	delay_ms(400);
-//	arrive_block_down();  //130
-//	claw_open();
-//	arrive_most_up();     //173
-//	claw_turn0();
-//	delay_ms(200);
-//	support_turn120();	
-//	delay_ms(100);
-//	
-//}
+////////////////////////////////////////////////////爪子具体动作
 
-///*****************
-//函数功能 : 爪子吧物块拿出载物台 放到第一层
-//输入参数 : 无
-//输出参数 ：无
-//**********************/
-//void claw_put_block(void)
-//{
-//	arrive_most_up();       
-//	claw_turn129();
-//	delay_ms(300);
-//	arrive_block_down();
-//	claw_close();
-//	delay_ms(300);	
-//	arrive_most_up(); 
-//	delay_ms(500);
-//	claw_turn0();
-//	delay_ms(300);
-//	support_turn120();
-//	arrive_block_put(); 
-//	delay_ms(300);	
-//	claw_open();
-//	delay_ms(300);
-//}
-
-///********************
-//函数功能 : 爪子吧物块拿出载物台 放到第二层
-//输入参数 : 无
-//输出参数 ：无
-//**********************/
-//void claw_put_block2(void)
-//{
-//	//claw_open();
-//	arrive_most_up();       
-//	claw_turn129();
-//	delay_ms(200);
-//	arrive_block_down();
-//	claw_close();
-//	delay_ms(300);
-//	arrive_most_up();   
-//	claw_turn0();
-//	delay_ms(300);
-//	support_turn120();
-//	arrive_block_put2(); 
-//	delay_ms(300);	
-//	claw_open();
-//	delay_ms(300);
-//}
-///********************
-//函数功能 : 爪子吧物块拿出载物台 放到第二层平台上
-//输入参数 : 无
-//输出参数 ：无
-//**********************/
-//void claw_put_block3(void)
-//{
-//	claw_open();
-//	arrive_most_up();       
-//	claw_turn129();
-//	delay_ms(200);
-//	arrive_block_down();
-//	claw_close();
-//	delay_ms(300);
-//	arrive_most_up();   
-//	claw_turn0();
-//	delay_ms(300);
-//	support_turn120();
-//	arrive_block_put3(); 
-//	delay_ms(300);	
-//	claw_open();
-//	delay_ms(300);
-//}
-///********************
-//函数功能 : 归位
-//输入参数 : 无
-//输出参数 ：无
-//**********************/
-//void claw_back(void)
-//{   
-//	arrive_most_up();
-//	delay_ms(200);
-//	claw_turn129();
-//	delay_ms(200);
-//  support_turn67();
-//}
 /********************
-函数功能 : 爪子把物块放到载物台   
+函数功能 : 爪子从地面把物块放车上 
+输入参数 : 无
+输出参数 ：无
+**********************/
+void claw_get_block(void)
+{
+	claw_turn0();
+	arrive_block_get();
+	claw_close();
+	delay_ms(200);
+	support_turn120();
+	arrive_most_up();
+	delay_ms(200);
+	claw_turn1();
+	delay_ms(200);
+	delay_ms(200);
+	delay_ms(200);
+	arrive_car_put();
+	delay_ms(300);
+	claw_open();
+	arrive_most_up();
+	claw_turn0();
+	claw_open();
+	delay_ms(200);
+}
+
+/********************
+函数功能 : 爪子从物料盘把物块放车上 
 输入参数 : 无
 输出参数 ：无
 **********************/
 void claw_get_block1(void)
 {
-	arrive_block_get();
+	claw_turn0();
+	arrive_block_get1();
 	claw_close();
 	delay_ms(200);
+	support_turn120();
 	arrive_most_up();
 	delay_ms(200);
 	claw_turn1();
 	delay_ms(200);
 	delay_ms(200);
 	delay_ms(200);
-	arrive_block_put();
+	arrive_car_put();
 	delay_ms(300);
 	claw_open();
-	 arrive_most_up();
+	arrive_most_up();
 	claw_turn0();
 	claw_open();
 	delay_ms(200);
 }
-/********************
-函数功能 : 爪子把物块放到载物台   
-输入参数 : 无
-输出参数 ：无
-**********************/
-void claw_get_block2(void)
-{
-	arrive_block_get();
-	claw_close();
-	delay_ms(200);
-	arrive_most_up();
-	delay_ms(200);
-	claw_turn2();
-	delay_ms(200);
-	delay_ms(200);
-	delay_ms(200);
-	arrive_block_put();
-	delay_ms(300);
-	claw_open();
-	 arrive_most_up();
-	claw_turn0();
-	claw_open();
-	delay_ms(200);
 
-}
-/********************
-函数功能 : 爪子把物块放到载物台
-输入参数 : 无
-输出参数 ：无
-**********************/
-void claw_get_block3(void)
-{
-	arrive_block_get();
-	claw_close();
-	delay_ms(200);
-	arrive_most_up();
-	delay_ms(200);
-	claw_turn3();
-	delay_ms(200);
-	delay_ms(200);
-	delay_ms(200);
-	arrive_block_put();
-	delay_ms(300);
-	claw_open();
-	arrive_most_up();
-	claw_turn0();
-	claw_open();
-	delay_ms(200);
-}
-/********************
-函数功能 : 爪子把物块放到载物台 
-输入参数 : 无
-输出参数 ：无
-**********************/
-void claw_get_block4(void)
-{
-	claw_turn0();
-	delay_ms(200);
-	arrive_block_get1();
-	claw_close();
-	delay_ms(200);
-	arrive_most_up();
-	delay_ms(200);
-	claw_turn1();
-	delay_ms(200);
-	delay_ms(200);
-	delay_ms(200);
-	arrive_block_put();
-	delay_ms(300);
-	claw_open();
-	arrive_most_up();
-	delay_ms(300);
-	claw_turn0();
-	delay_ms(300);
-	arrive_circle_capture2();
-	claw_open();
-	delay_ms(200);
-}
-/********************
-函数功能 : 爪子把物块放到载物台 
-输入参数 : 无
-输出参数 ：无
-**********************/
-void claw_get_block5(void)
-{
-	claw_turn0();
-	delay_ms(200);
-	arrive_block_get1();
-	claw_close();
-	delay_ms(200);
-	arrive_most_up();
-	delay_ms(200);
-	claw_turn2();
-	delay_ms(200);
-	delay_ms(200);
-	delay_ms(200);
-	arrive_block_put();
-	delay_ms(300);
-	claw_open();
-	arrive_most_up();
-	delay_ms(300);
-	claw_turn0();
-	delay_ms(300);
-	arrive_circle_capture2();
-	claw_open();
-	delay_ms(200);
-}
-/********************
-函数功能 : 爪子把物块放到载物台 
-输入参数 : 无
-输出参数 ：无
-**********************/
-void claw_get_block6(void)
-{
-	claw_turn0();
-	delay_ms(200);
-	arrive_block_get1();
-	claw_close();
-	delay_ms(200);
-	arrive_most_up();
-	delay_ms(200);
-	claw_turn3();
-	delay_ms(200);
-	delay_ms(200);
-	delay_ms(200);
-	arrive_block_put();
-	delay_ms(300);
-	claw_open();
-	arrive_most_up();
-	delay_ms(300);
-	claw_turn0();
-	delay_ms(300);
-	arrive_circle_capture2();
-	claw_open();
-	delay_ms(200);
-}
-/********************
-函数功能 : 爪子把物块放到载物台  
-输入参数 : 无
-输出参数 ：无
-**********************/
-// void claw_get_block4(void)
-// {
-// 	arrive_block_get();
-// 	claw_close();
-// 	delay_ms(200);
-// 	arrive_most_up();
-// 	delay_ms(200);
-// 	claw_turn4();
-// 	delay_ms(200);
-// 	delay_ms(200);
-// 	delay_ms(200);
-// 	arrive_block_put();
-// 	claw_open1();
-// 	arrive_most_up();
-// 	claw_turn0();
-// 	claw_open();
-// 	delay_ms(200);
-// }
-/********************
-函数功能 : 爪子把物块放到载物台   
-输入参数 : 无
-输出参数 ：无
-**********************/
-// void claw_get_block5(void)
-// {
-// 	arrive_block_get();
-// 	claw_close();
-// 	delay_ms(200);
-// 	arrive_most_up();
-// 	delay_ms(200);
-// 	claw_turn5();
-// 	delay_ms(200);
-// 	delay_ms(200);
-// 	delay_ms(200);
-// 	arrive_block_put();
-// 	claw_open1();
-// 	arrive_most_up();
-// 	claw_turn0();
-// 	claw_open();
-// 	delay_ms(200);
-// }
-/********************
-函数功能 : 爪子吧物块拿出载物台 放到1
-输入参数 : 无
-输出参数 ：无
-**********************/
-void claw_put_block1(void)
-{
 
+/********************
+函数功能 : 爪子从车上把物块放地上
+输入参数 : 无
+输出参数 ：无
+**********************/
+void claw_put_block(void)
+{
+    support_turn120();
 	arrive_most_up();       
 	claw_turn1();
 	delay_ms(300);
-	arrive_block_down();
+	arrive_car_get();
 	claw_close();
 	delay_ms(300);	
 	arrive_most_up(); 
-  delay_ms(300);
-  delay_ms(300);  
+    delay_ms(300);
+    delay_ms(300);  
 	claw_turn0();
 	delay_ms(300);
-	arrive_block_get();
+	arrive_block_put();
 	delay_ms(300);	
 	claw_open();
 	delay_ms(300);
 	arrive_most_up();
 	delay_ms(300);
 }
+
+
 /********************
-函数功能 : 爪子吧物块拿出载物台 放到2
+函数功能 : 爪子把物块从车上放到二层
 输入参数 : 无
 输出参数 ：无
 **********************/
-void claw_put_block2(void)
+void claw_put_blockF2(void)
 {
-	
-	arrive_most_up();   	
-	claw_turn2();
-	delay_ms(200);
-	arrive_block_down();
-	claw_close();
-	delay_ms(300);
-	arrive_most_up();
-  delay_ms(300);	
-	delay_ms(300);
-	claw_turn0();
-	delay_ms(300);
-	arrive_block_get();
-	delay_ms(300);	
-	claw_open();
-	delay_ms(300);
-	arrive_most_up();
-	delay_ms(300);
-}
-/********************
-函数功能 : 爪子吧物块拿出载物台 放到3
-输入参数 : 无
-输出参数 ：无
-**********************/
-void claw_put_block3(void)
-{
-	
+    support_turn120();
 	arrive_most_up();       
-	claw_turn3();
-	delay_ms(200);
-	arrive_block_down();
-	claw_close();
-	delay_ms(300);
-	arrive_most_up();  
-  delay_ms(300);
-  delay_ms(300);  
-	claw_turn0();
-	delay_ms(300);
-	arrive_block_get();
-	delay_ms(300);	
-	claw_open();
-	delay_ms(300);
-	arrive_most_up();
-	delay_ms(300);
-}
-
-/********************
-函数功能 : 爪子把车上1号位置的物块码放到物块二层
-输入参数 : 无
-输出参数 ：无
-**********************/
-void claw_put_1blockF2(void)
-{
-	
-    arrive_most_up();
 	claw_turn1();
-	delay_ms(200);
-	arrive_block_down();
+	delay_ms(300);
+	arrive_car_get();
 	claw_close();
-	delay_ms(300);
-	arrive_most_up();
-	delay_ms(300);
-    delay_ms(300); 
-	claw_turn0();
-	delay_ms(300);
-	arrive_block_putF2();
-	delay_ms(300);
-	claw_open();
-	delay_ms(300);
-		arrive_most_up();
-	delay_ms(300);
-}
-/********************
-函数功能 : 爪子把车上2号位置的物块码放到物块二层
-输入参数 : 无
-输出参数 ：无
-**********************/
-void claw_put_2blockF2(void)
-{
-
-    arrive_most_up();
-	claw_turn2();
-	delay_ms(200);
-	arrive_block_down();
-	claw_close();
-	delay_ms(300);
-	arrive_most_up();
-	delay_ms(300);
-    delay_ms(300); 
-	claw_turn0();
-	delay_ms(300);
-	arrive_block_putF2();
-	delay_ms(300);
-	claw_open();
 	delay_ms(300);	
-		arrive_most_up();
-	delay_ms(300);
-}
-/********************
-函数功能 : 爪子把车上3号位置的物块码放到物块二层
-输入参数 : 无
-输出参数 ：无
-**********************/
-void claw_put_3blockF2(void)
-{
-
-    arrive_most_up();
-	claw_turn3();
-	delay_ms(200);
-	arrive_block_down();
-	claw_close();
-	delay_ms(300);
-	arrive_most_up();
-	delay_ms(300);
-    delay_ms(300); 
+	arrive_most_up(); 
+    delay_ms(300);
+    delay_ms(300);  
 	claw_turn0();
 	delay_ms(300);
-	arrive_block_putF2();
-	delay_ms(300);
+	arrive_put_down2();
+	delay_ms(300);	
 	claw_open();
 	delay_ms(300);
 	arrive_most_up();
 	delay_ms(300);
 }
-/********************
-函数功能 : 爪子吧物块拿出载物台 放到4
-输入参数 : 无
-输出参数 ：无
-**********************/
-// void claw_put_block4(void)
-// {
-// 	claw_open1();
-// 	arrive_most_up();       
-// 	claw_turn4();
-// 	delay_ms(200);
-// 	arrive_block_down();
-// 	claw_close();
-// 	delay_ms(300);
-// 	arrive_most_up(); 
-// 	delay_ms(300);
-//   delay_ms(300);	
-// 	claw_turn0();
-// 	delay_ms(300);
-// 	arrive_block_get(); 
-// 	delay_ms(300);	
-// 	claw_open();
-// 	delay_ms(300);
-// }
-/********************
-函数功能 : 爪子吧物块拿出载物台 放到5
-输入参数 : 无
-输出参数 ：无
-**********************/
-// void claw_put_block5(void)
-// {
-// 	claw_open1();
-// 	arrive_most_up();  
-// 	claw_turn5();
-// 	delay_ms(300);
-// 	delay_ms(300);
-// 	arrive_block_down();
-// 	claw_close();
-// 	delay_ms(300);
-// 	arrive_most_up(); 
-//   delay_ms(300);
-// 	delay_ms(300);
-// 	claw_turn0();
-// 	delay_ms(300);	
-// 	arrive_block_get(); 
-// 	delay_ms(300);
-// 	claw_open();
-// 	delay_ms(300);
-// }
-/********************
-函数功能 : 爪子吧物块拿出载物台 放到第一层
-输入参数 : 无
-输出参数 ：无
-**********************/
-// void claw_put_block6(void)
-// {
-// 	claw_open1();
-// 	arrive_most_up();       
-// 	claw_turn2();//
-// 	delay_ms(200);
-// 	arrive_block_down();
-// 	claw_close();
-// 	delay_ms(300);
-// 	arrive_most_up(); 
-// 	delay_ms(300);
-//   delay_ms(300);	
-// 	claw_turn0();
-// 	delay_ms(300);
-// 	arrive_block_get2(); 
-// 	delay_ms(300);	
-// 	claw_open();
-// 	delay_ms(300);
-// }
-/********************
-函数功能 : 爪子吧物块拿出载物台 放到第二层
-输入参数 : 无
-输出参数 ：无
-**********************/
-// void claw_put_block7(void)
-// {
-// 	claw_open1();
-// 	arrive_most_up();  
-// 	claw_turn3();//
-// 	delay_ms(300);
-// 	delay_ms(300);
-// 	arrive_block_down();
-// 	claw_close();
-// 	delay_ms(300);
-// 	arrive_most_up(); 
-//   delay_ms(300);
-// 	delay_ms(300);
-// 	claw_turn0();
-// 	delay_ms(300);	
-// 	arrive_block_get3(); 
-// 	delay_ms(300);
-// 	claw_open();
-// 	delay_ms(300);
-// }
+
 
 /********************
-函数功能 : 爪子吧物块拿出载物台 放到5
+函数功能 : 爪子归位
 输入参数 : 无
 输出参数 ：无
 **********************/
@@ -864,54 +325,6 @@ void claw_home(void)
 {
 	arrive_most_up();
 	delay_ms(300);  
-	claw_turn3();
+	claw_turn1();
 }
-///********************
-//函数功能 : 爪子吧物块拿出载物台 放到4
-//输入参数 : 无
-//输出参数 ：无
-//**********************/
-//void claw_put_block6(void)
-//{
-//	claw_open1();
-//	arrive_most_up();       
-//	claw_turn4();
-//	delay_ms(200);
-//	arrive_block_down();
-//	claw_close();
-//	delay_ms(300);
-//	arrive_most_up(); 
-//	delay_ms(300);
-//  delay_ms(300);	
-//	claw_turn0();
-//	delay_ms(300);
-//	arrive_block_get2(); 
-//	delay_ms(300);	
-//	claw_open();
-//	delay_ms(300);
-//}
-///********************
-//函数功能 : 爪子吧物块拿出载物台 放到5
-//输入参数 : 无
-//输出参数 ：无
-//**********************/
-//void claw_put_block7(void)
-//{
-//	claw_open1();
-//	arrive_most_up();  
-//	claw_turn5();
-//	delay_ms(300);
-//	delay_ms(300);
-//	arrive_block_down();
-//	claw_close();
-//	delay_ms(300);
-//	arrive_most_up(); 
-//  delay_ms(300);
-//	delay_ms(300);
-//	claw_turn0();
-//	delay_ms(300);	
-//	arrive_block_get3(); 
-//	delay_ms(300);
-//	claw_open();
-//	delay_ms(300);
-//}
+

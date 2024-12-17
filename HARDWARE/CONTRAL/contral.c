@@ -41,12 +41,12 @@ void contral_motor_Init(void)
 ********************************************/
 void claw_Init(void)
 {
-	MOTOR1_Init();
+	MOTOR1_Init();//升降
+	MOTOR5_Init();//转盘
 	Servo2_Init();
 	Servo3_Init();
 	claw_turn0();
-//	servo_angle2=70;   //张开
-//	servo_angle3=218;  // 转到正向
+	
 	claw_open();
 	claw.position_now=0;  
 	claw.position_target=0;
@@ -378,11 +378,11 @@ void Motor1_DIR(uint8_t a)
 {
 	if(a == CW)
 	{
-		GPIO_ResetBits(GPIOA,GPIO_Pin_4);
+		GPIO_SetBits(GPIOA,GPIO_Pin_4);
 	}
 	else
 	{
-		GPIO_SetBits(GPIOA,GPIO_Pin_4);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_4);
 	}
 }
 /*******************************************
@@ -595,10 +595,9 @@ void uart_handle(void)
 			}			
 			break;
 		}			
-		case 0x04:  //二维码识别以及串口屏展示
+		case 0x04:  //让单片机扫码
 		{
-			
-
+			UART5_Start_Scan();
 			break;
 		}	
 		case 0x05:  //靶心识别x方向
@@ -630,21 +629,21 @@ void uart_handle(void)
 			break;
 		}	
 		//0x7-0x9  从物料台获得物块放车上
-		case 0x07:     //物块从物料转盘搬到车上1号位
+		case 0x07:     //物块从物料转盘搬到车上
 		{
-            claw_get_block4();
+            claw_get_block1();
 			break;
 		}
 
         case 0x08:     //物块从物料转盘搬到车上2号位
 		{
-			claw_get_block5();
+
 			break;
 		}
 
 		case 0x09:     //物块从物料转盘搬到车上3号位
 		{
-			claw_get_block6();
+
 			break;
 		}
 
@@ -661,7 +660,7 @@ void uart_handle(void)
 				}
 				case 0x02:
 				{
-						arrive_circle_capture2();   //到达转盘读取颜色
+						arrive_color_reco();   //到达转盘读取颜色
 					  break;					
 				}
 				case 0x03:
@@ -671,7 +670,7 @@ void uart_handle(void)
 				}	
 				case 0x04:
 				{
-					     arrive_block_putF2();   //到达码垛高度，识别靶心
+					    arrive_put_down2();   //识别二层码垛的高度，有待改变
 					  break;
 				}
 				default :
@@ -695,7 +694,7 @@ void uart_handle(void)
 					MOTOR_Displacement(move_mode,0);
 					claw_turn0();
 					delay_ms(100);  //先执行跑的在执行升降的
-					arrive_camera2(); 
+					arrive_camera();
 					
 					while(1)
 					{
@@ -712,7 +711,7 @@ void uart_handle(void)
 					stepPosition1=0;  //抓
 					MOTOR_Displacement(move_mode,0);
 					delay_ms(200);  //先执行跑的在执行升降的
-					arrive_circle_capture2();
+					arrive_color_reco();  //这个是颜色识别高度？
 					while(1)
 					{
 						if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
@@ -752,50 +751,47 @@ void uart_handle(void)
 		case 0x11:                     //物料块夹取——从地上夹取之后放置到对应位置然后爪子又会回到识别的位置
 		{
 
-			claw_get_block1();
+			claw_get_block();
 			break;
 		}
 		case 0x12:
 		{
-			claw_get_block2();
+
 			break;
 		}
 		case 0x13:
 		{
-			claw_get_block3();
+
 			break;
-		}
-		
-		
-		
-		case 0x21:
+		}		
+		case 0x21:  //物块放地上
 		{
-			claw_put_block1();
+			claw_put_block();   
 			break;
 		}
 		case 0x22:
 		{
-			claw_put_block2();
+
 			break;
 		}
 		case 0x23:
 		{
-			claw_put_block3();
+
 			break;
 		}
 		case 0x24:   //从车上的1号位码到第二层
 		{
-             claw_put_1blockF2();
+             claw_put_blockF2();
 			 break;
 		}
-		case 0x25:   //从车上的2号位码到第二层
+		case 0x25:  
 		{
-            claw_put_2blockF2();
+
 			 break;
 		}
-		case 0x26:   //从车上的3号位码到第三层
+		case 0x26: 
 		{
-            claw_put_3blockF2();
+
 			break;
 		}
 
@@ -817,8 +813,8 @@ void uart_handle(void)
 
 		case 0x36 ://53
 		{
-			UART5_PraseCode(UART5_RX_BUF,&code1,&code2);
-			u2_printf("t3.txt=\"%d+%d\"",code1,code2);
+			UART5_PraseCode(UART5_RX_BUF,&code1,&code2);//解析出二维码数据
+			u2_printf("t3.txt=\"%d+%d\"",code1,code2);//多次发送给串口屏
 			delay_ms(10);
 			u2_printf("t3.txt=\"%d+%d\"",code1,code2);
 			delay_ms(10);
@@ -827,19 +823,19 @@ void uart_handle(void)
 			u2_printf("t3.txt=\"%d+%d\"",code1,code2);
 			delay_ms(10);
 			u2_printf("t3.txt=\"%d+%d\"",code1,code2);
-			delay_ms(10);
-            UART1_SendString(UART5_RX_BUF);
+			delay_ms(100);
+            UART1_SendString(UART5_RX_BUF);  //给树莓派发送二维码信息
 			break;
 		}
 		case 0x34 ://52
 		{
-		//claw_put_block7();
-				break;
+
+			break;
 		}
 		case 0x33 :
 		{
-		claw_home();//
-				break;
+		    claw_home();
+			break;
 		}
 				
 		
@@ -998,7 +994,7 @@ void claw_open(void)
 **********************/
 void claw_close(void)
 {
-		servo_angle2=30;
+		servo_angle2=60;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
