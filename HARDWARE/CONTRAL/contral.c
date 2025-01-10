@@ -539,8 +539,13 @@ void uart_handle(void)
 {
 	uint8_t mode=0x00;
 	mode = Serial_RXPacket[0];   //接受模式
-	int8_t x_dis = 0;
-	int8_t y_dis = 0;	
+	uint8_t x_dis1 = 0;  //将距离拆分成两位进行传递,x_dis1和x_dis2
+	uint8_t x_dis2 = 0;
+	uint16_t temp_dis = 0; //转化中间变量
+	uint8_t y_dis1 = 0;	
+	uint8_t y_dis2 = 0;
+    int16_t x_dis  = 0;
+	int16_t y_dis  = 0;
 	int8_t angle = 0;		
 	uint16_t code1 =0; 
 	uint16_t code2 =0; 	
@@ -555,7 +560,10 @@ void uart_handle(void)
 	{
 		case 0x01:  //x位移
 		{
-			x_dis = Serial_RXPacket[1];
+			x_dis1 = Serial_RXPacket[1];
+			x_dis2 = Serial_RXPacket[2];
+			temp_dis =  (x_dis1 << 8) | x_dis2 ;
+			x_dis  = (int16_t)temp_dis;
 			stepPosition=0;
 			MOTOR_Displacement(x_dis,0);
 			while(1)
@@ -569,7 +577,10 @@ void uart_handle(void)
 		}
 		case 0x02:  //y位移
 		{
-			y_dis = Serial_RXPacket[2];
+            y_dis1 = Serial_RXPacket[1];
+			y_dis2 = Serial_RXPacket[2];
+			temp_dis =  (y_dis1 << 8) | y_dis2 ;
+			y_dis  = (int16_t)temp_dis;
 			stepPosition=0;			
 			MOTOR_Displacement(0,y_dis);
 			while(1)
