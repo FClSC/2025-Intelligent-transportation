@@ -316,7 +316,7 @@ void USART2_IRQHandler(void)
 		// 			Serial_Flag2 = 1;
 		// 	}
 		// }
-		if(Rx2Data == 0x02)
+		if(Rx2Data == 0x02) //串口屏按下按钮会给单片机发送多个0x02，只要收到一个，就会把标志位置1
 		Serial_Flag2 = 1;
 		USART_ClearITPendingBit(USART2,USART_IT_RXNE);
 	}

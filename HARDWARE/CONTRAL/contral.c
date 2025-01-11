@@ -556,6 +556,14 @@ void uart_handle(void)
 //	uint8_t mode_get=0;
 //	uint8_t mode_put=0;
 	
+/*收到树莓派发送的数据包的格式：
+0xFF 
+0[模式] 
+1[x或y位移的高八位]  2[x或y位移的低八位]     
+3[旋转角度] 4[二维码前三位高八位] 5[二维码前三位低八位]
+6[二维码后三位高八位] 7[二维码后三位低八位]
+0xFE
+                                                     */
 	switch(mode)
 	{
 		case 0x01:  //x位移
@@ -613,7 +621,10 @@ void uart_handle(void)
 		}	
 		case 0x05:  //靶心识别x方向
 		{
-			x_dis = Serial_RXPacket[1];
+			x_dis1 = Serial_RXPacket[1];
+			x_dis2 = Serial_RXPacket[2];
+			temp_dis =  (x_dis1 << 8) | x_dis2 ;
+			x_dis  = (int16_t)temp_dis;
 			stepPosition=0;
 			MOTOR_Displacement_mm(x_dis,0);
 			while(1)
@@ -627,7 +638,10 @@ void uart_handle(void)
 		}		
 		case 0x06:  //靶心识别y方向
 		{
-			y_dis = Serial_RXPacket[2];
+			y_dis1 = Serial_RXPacket[1];
+			y_dis2 = Serial_RXPacket[2];
+			temp_dis =  (y_dis1 << 8) | y_dis2 ;
+			y_dis  = (int16_t)temp_dis;
 			stepPosition=0;
 			MOTOR_Displacement_mm(0,y_dis);
 			while(1)
@@ -639,10 +653,10 @@ void uart_handle(void)
 			}
 			break;
 		}	
-		//0x7-0x9  从物料台获得物块放车上
+		//0x07-0x09  从物料台获得物块放车上
 		case 0x07:     //物块从物料转盘搬到车上
 		{
-            claw_get_block1();
+            claw_get_block1(); 
 			break;
 		}
 
@@ -671,18 +685,18 @@ void uart_handle(void)
 				}
 				case 0x02:
 				{
-						arrive_color_reco();   //到达转盘读取颜色
+					arrive_color_reco();   //到达转盘读取颜色
 					  break;					
 				}
 				case 0x03:
 				{
-						arrive_circle_capture();   //到达靶心识别1
+					arrive_circle_capture();   //到达靶心识别1
 					  break;					
 				}	
 				case 0x04:
 				{
-					    arrive_put_down2();   //识别二层码垛的高度，有待改变
-					  break;
+					arrive_put_down2();   //识别二层码垛的高度，有待改变
+					break;
 				}
 				default :
 				{
@@ -775,7 +789,7 @@ void uart_handle(void)
 
 			break;
 		}		
-		case 0x21:  //物块放地上
+		case 0x21:  //物块从车上放地上
 		{
 			claw_put_block();   
 			break;
@@ -989,7 +1003,7 @@ void claw_down2(void)
 输入参数 : 无
 输出参数 ：无
 **********************/
-void claw_open(void)
+void claw_open(void)//安装的时候需要在这个open的情况下安装
 {
 		servo_angle2=0;
 		SERVO2_CONTRAL(servo_angle2);

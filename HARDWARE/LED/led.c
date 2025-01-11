@@ -27,6 +27,6 @@ void LED_Init(void)
 	GPIO_InitStruct.GPIO_Speed=GPIO_Speed_50MHz;
 	GPIO_Init(GPIOE,&GPIO_InitStruct);	
 	
-	GPIO_SetBits(GPIOB,GPIO_Pin_5);
-	GPIO_SetBits(GPIOE,GPIO_Pin_5);
+	GPIO_SetBits(GPIOB,GPIO_Pin_5);//ºìµÆ
+	GPIO_SetBits(GPIOE,GPIO_Pin_5);//ÂÌµÆ
 }

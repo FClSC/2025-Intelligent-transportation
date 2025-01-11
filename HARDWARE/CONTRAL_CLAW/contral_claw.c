@@ -257,6 +257,7 @@ void claw_get_block1(void)
 	claw_turn0();
 	claw_open();
 	delay_ms(200);
+	//可能还需要加一个回到正常识别物料盘物块颜色的高度
 }
 
 

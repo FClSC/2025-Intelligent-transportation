@@ -11,7 +11,7 @@ void system_Init(void)
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置中断优先级分组为组2：2位抢占优先级，2位响应优先级
 	LED_Init();
 	KEY_Init();
-     OLED_Init();
+    OLED_Init();
 	//delay_init();
 	UART1_Init();
 	UART2_Init();
