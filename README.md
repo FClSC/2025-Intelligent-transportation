@@ -16,6 +16,9 @@ USART1_RX  PA10
 - 串口屏
 USART2_TX  PD5      重定义而来，PA2已用于舵机输出PWM *==GPIO_PinRemapConfig(GPIO_Remap_USART2,ENABLE)==*
 USART2_RX  PD6      重定义而来，PA3已用于舵机输出PWM
+- 未使用到的串口，但可以用于别的用途
+USART3_TX  PD8      重定义而来，PB10已用于爪子升降输出PWM *==GPIO_PinRemapConfig(GPIO_Remap_USART3,ENABLE)==*
+USART2_RX  PD9      重定义而来，PB11已用于MOTOR2输出PWM
 - 陀螺仪 HWT101
 UART4_TX  PC10
 UART4_RX  PC11

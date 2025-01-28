@@ -45,8 +45,7 @@ void claw_Init(void)
 	MOTOR5_Init();//转盘
 	Servo2_Init();
 	Servo3_Init();
-	claw_turn0();
-	
+	claw_turn0();	
 	claw_open();
 	claw.position_now=0;  
 	claw.position_target=0;
@@ -621,10 +620,7 @@ void uart_handle(void)
 		}	
 		case 0x05:  //靶心识别x方向
 		{
-			x_dis1 = Serial_RXPacket[1];
-			x_dis2 = Serial_RXPacket[2];
-			temp_dis =  (x_dis1 << 8) | x_dis2 ;
-			x_dis  = (int16_t)temp_dis;
+			x_dis = Serial_RXPacket[1];
 			stepPosition=0;
 			MOTOR_Displacement_mm(x_dis,0);
 			while(1)
@@ -638,10 +634,7 @@ void uart_handle(void)
 		}		
 		case 0x06:  //靶心识别y方向
 		{
-			y_dis1 = Serial_RXPacket[1];
-			y_dis2 = Serial_RXPacket[2];
-			temp_dis =  (y_dis1 << 8) | y_dis2 ;
-			y_dis  = (int16_t)temp_dis;
+			y_dis = Serial_RXPacket[2];
 			stepPosition=0;
 			MOTOR_Displacement_mm(0,y_dis);
 			while(1)
@@ -660,17 +653,23 @@ void uart_handle(void)
 			break;
 		}
 
-        case 0x08:     //物块从物料转盘搬到车上2号位
+        case 0x08:     //物块从地上放到车上
 		{
-
+            claw_get_block();
 			break;
 		}
 
-		case 0x09:     //物块从物料转盘搬到车上3号位
+		case 0x09:     //物块从车上放地上
 		{
-
+            claw_put_block();   
 			break;
 		}
+        case 0x0A:
+		{
+          claw_put_blockF2(); //物块从车上放二层
+		  break;
+		}
+		
 
 		case 0x0B: // 到达指定位置
 		{
@@ -712,7 +711,7 @@ void uart_handle(void)
 			
 			switch(claw_mode)
 			{
-				case 0x01:  //到达二维码
+				case 0x01:  //到达二维码，现在不需要这个东西，换扫码模块了
 				{	
 					stepPosition=0;   //跑
 					stepPosition1=0;  //抓
@@ -746,7 +745,7 @@ void uart_handle(void)
 					}						
 					break;
 				}
-				case 0x03:  // 到达靶心识别1
+				case 0x03:  // 到达靶心识别1，应该是快要到把心识别的地方用这个，边跑，边降低到这个高度
 				{
 					stepPosition=0;   //跑
 					stepPosition1=0;  //抓
@@ -772,11 +771,10 @@ void uart_handle(void)
 			break;
 		}
 
-		//0x11-0x13  从地面获得物块放车上
-		case 0x11:                     //物料块夹取——从地上夹取之后放置到对应位置然后爪子又会回到识别的位置
+		case 0x11:               
 		{
 
-			claw_get_block();
+			
 			break;
 		}
 		case 0x12:
@@ -789,9 +787,9 @@ void uart_handle(void)
 
 			break;
 		}		
-		case 0x21:  //物块从车上放地上
+		case 0x21:  
 		{
-			claw_put_block();   
+			
 			break;
 		}
 		case 0x22:
@@ -804,9 +802,9 @@ void uart_handle(void)
 
 			break;
 		}
-		case 0x24:   //从车上的1号位码到第二层
+		case 0x24:  
 		{
-             claw_put_blockF2();
+             
 			 break;
 		}
 		case 0x25:  
@@ -836,7 +834,7 @@ void uart_handle(void)
 				break;
 		}
 
-		case 0x36 ://53
+		case 0x36 ://54
 		{
 			UART5_PraseCode(UART5_RX_BUF,&code1,&code2);//解析出二维码数据
 			u2_printf("t3.txt=\"%d+%d\"",code1,code2);//多次发送给串口屏
@@ -852,7 +850,7 @@ void uart_handle(void)
             UART1_SendString(UART5_RX_BUF);  //给树莓派发送二维码信息
 			break;
 		}
-		case 0x34 ://52
+		case 0x34 :
 		{
 
 			break;
@@ -1005,7 +1003,7 @@ void claw_down2(void)
 **********************/
 void claw_open(void)//安装的时候需要在这个open的情况下安装
 {
-		servo_angle2=0;
+		servo_angle2=30;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
@@ -1019,7 +1017,7 @@ void claw_open(void)//安装的时候需要在这个open的情况下安装
 **********************/
 void claw_close(void)
 {
-		servo_angle2=60;
+		servo_angle2=57;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
@@ -1047,7 +1045,7 @@ void claw_open1(void)
 **********************/
 void claw_turn0(void)
 {
-		servo_angle3=0;					//56
+		servo_angle3=2;					//56
 		SERVO3_CONTRAL(servo_angle3);      //56
 }
 
@@ -1070,7 +1068,7 @@ void claw_turn129(void)
 **********************/
 void claw_turn1(void)
 {
-		servo_angle3 = 147;
+		servo_angle3 = 148;
 		SERVO3_CONTRAL(servo_angle3);
 }
 /********************

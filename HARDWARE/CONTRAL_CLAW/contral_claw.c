@@ -216,7 +216,6 @@ void claw_get_block(void)
 	arrive_block_get();
 	claw_close();
 	delay_ms(200);
-	support_turn120();
 	arrive_most_up();
 	delay_ms(200);
 	claw_turn1();
@@ -230,6 +229,7 @@ void claw_get_block(void)
 	claw_turn0();
 	claw_open();
 	delay_ms(200);
+	support_turn120();
 }
 
 /********************
@@ -243,7 +243,6 @@ void claw_get_block1(void)
 	arrive_block_get1();
 	claw_close();
 	delay_ms(200);
-	support_turn120();
 	arrive_most_up();
 	delay_ms(200);
 	claw_turn1();
@@ -257,7 +256,9 @@ void claw_get_block1(void)
 	claw_turn0();
 	claw_open();
 	delay_ms(200);
-	//可能还需要加一个回到正常识别物料盘物块颜色的高度
+	arrive_color_reco();//再次回到识别物料颜色的高度
+	support_turn120();
+
 }
 
 
@@ -268,10 +269,11 @@ void claw_get_block1(void)
 **********************/
 void claw_put_block(void)
 {
-    support_turn120();
-	arrive_most_up();       
+ 
+	arrive_most_up();
+	delay_ms(500);      
 	claw_turn1();
-	delay_ms(300);
+	delay_ms(1000);
 	arrive_car_get();
 	claw_close();
 	delay_ms(300);	
@@ -286,6 +288,7 @@ void claw_put_block(void)
 	delay_ms(300);
 	arrive_most_up();
 	delay_ms(300);
+	support_turn120();
 }
 
 
@@ -296,7 +299,7 @@ void claw_put_block(void)
 **********************/
 void claw_put_blockF2(void)
 {
-    support_turn120();
+
 	arrive_most_up();       
 	claw_turn1();
 	delay_ms(300);
@@ -314,6 +317,7 @@ void claw_put_blockF2(void)
 	delay_ms(300);
 	arrive_most_up();
 	delay_ms(300);
+	support_turn120();
 }
 
 
