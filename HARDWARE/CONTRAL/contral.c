@@ -8,7 +8,7 @@ speedRampData srd2;
 
 uint8_t servo_angle1;
 uint8_t servo_angle2;
-uint8_t servo_angle3;
+uint16_t servo_angle3;
 
 
 int stepPosition = 0;
@@ -546,8 +546,8 @@ void uart_handle(void)
     int16_t x_dis  = 0;
 	int16_t y_dis  = 0;
 	int8_t angle = 0;		
-	uint16_t code1 =0; 
-	uint16_t code2 =0; 	
+	int16_t code1 =0; 
+	int16_t code2 =0; 	
 	uint8_t position_camera = 0;
 //	uint16_t dis_claw = 0;
 	uint8_t claw_mode=0;
@@ -615,7 +615,7 @@ void uart_handle(void)
 		}			
 		case 0x04:  //让单片机扫码
 		{
-			UART5_Start_Scan();
+			UART5_Start_Scan();			
 			break;
 		}	
 		case 0x05:  //靶心识别x方向
@@ -836,7 +836,11 @@ void uart_handle(void)
 
 		case 0x36 ://54
 		{
-			UART5_PraseCode(UART5_RX_BUF,&code1,&code2);//解析出二维码数据
+			UART1_SendString(UART5_RX_BUF);  //给树莓派发送二维码信息
+			UART1_SendString(UART5_RX_BUF);  //给树莓派发送二维码信息
+			UART1_SendString(UART5_RX_BUF);  //给树莓派发送二维码信息
+			UART1_SendString(UART5_RX_BUF);  //给树莓派发送二维码信息
+       UART5_ParseCode(UART5_RX_BUF,&code1,&code2);//解析出二维码数据
 			u2_printf("t3.txt=\"%d+%d\"",code1,code2);//多次发送给串口屏
 			delay_ms(10);
 			u2_printf("t3.txt=\"%d+%d\"",code1,code2);
@@ -847,7 +851,7 @@ void uart_handle(void)
 			delay_ms(10);
 			u2_printf("t3.txt=\"%d+%d\"",code1,code2);
 			delay_ms(100);
-            UART1_SendString(UART5_RX_BUF);  //给树莓派发送二维码信息
+
 			break;
 		}
 		case 0x34 :
@@ -1017,7 +1021,7 @@ void claw_open(void)//安装的时候需要在这个open的情况下安装
 **********************/
 void claw_close(void)
 {
-		servo_angle2=57;
+		servo_angle2=65;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
@@ -1045,7 +1049,7 @@ void claw_open1(void)
 **********************/
 void claw_turn0(void)
 {
-		servo_angle3=2;					//56
+		servo_angle3=3;					//56
 		SERVO3_CONTRAL(servo_angle3);      //56
 }
 
@@ -1120,7 +1124,7 @@ void claw_turn5(void)
 **********************/
 void support_turn120(void)
 {
-	MSD_Move2(1067,1,1,2);
+	MSD_Move2(1067,3,3,6);
 }
 void support_turn35(void)
 {

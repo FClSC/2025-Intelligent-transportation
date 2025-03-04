@@ -248,6 +248,7 @@ void UART2_Init(void)
   USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
 	
   USART_Cmd(USART2, ENABLE);
+	
 }
 /********************************
 函数功能 : 串口2 发送一个字节
@@ -337,27 +338,29 @@ uint8_t Serial2_GetRxFlag(void)
 	return 0;
 }
 
-void u2_printf(char* fmt,...)  
-{  
- u16 i,j;
- va_list ap;
- va_start(ap,fmt);
- vsprintf((char*)USART2_TX_BUF,fmt,ap);
- va_end(ap);
- i=strlen((const char*)USART2_TX_BUF);//此次发送数据的长度
- for(j=0;j<i;j++)//循环发送数据
- { 
-  USART_SendData(USART2,(uint8_t)USART2_TX_BUF[j]);   //发送数据到串口2
-   while(USART_GetFlagStatus(USART2,USART_FLAG_TC)==RESET);  //等待上次传输完成 
- } 
- USART_SendData(USART2,(uint8_t)0xff);  //这个函数改为你的单片机的串口发送单字节函数
- while (USART_GetFlagStatus(USART2, USART_FLAG_TXE) == RESET); 
- USART_SendData(USART2,(uint8_t)0xff);  //这个函数改为你的单片机的串口发送单字节函数
- while (USART_GetFlagStatus(USART2, USART_FLAG_TXE) == RESET); 
- USART_SendData(USART2,(uint8_t)0xff);  //这个函数改为你的单片机的串口发送单字节函数
- while (USART_GetFlagStatus(USART2, USART_FLAG_TXE) == RESET); 
-}
 
+
+	void u2_printf(char* fmt,...)  
+	{  
+	 u16 i,j;
+	 va_list ap;
+	 va_start(ap,fmt);
+	 vsprintf((char*)USART2_TX_BUF,fmt,ap);
+	 va_end(ap);
+	 i=strlen((const char*)USART2_TX_BUF);//此次发送数据的长度
+	 for(j=0;j<i;j++)//循环发送数据
+	 { 
+	  USART_SendData(USART2,(uint8_t)USART2_TX_BUF[j]);   //发送数据到串口2
+	   while(USART_GetFlagStatus(USART2,USART_FLAG_TC)==RESET);  //等待上次传输完成 
+	 } 
+	 USART_SendData(USART2,(uint8_t)0xff);  //这个函数改为你的单片机的串口发送单字节函数
+	 while (USART_GetFlagStatus(USART2, USART_FLAG_TXE) == RESET); 
+	 USART_SendData(USART2,(uint8_t)0xff);  //这个函数改为你的单片机的串口发送单字节函数
+	 while (USART_GetFlagStatus(USART2, USART_FLAG_TXE) == RESET); 
+	 USART_SendData(USART2,(uint8_t)0xff);  //这个函数改为你的单片机的串口发送单字节函数
+	 while (USART_GetFlagStatus(USART2, USART_FLAG_TXE) == RESET); 
+	}
+	
 
 
 //串口四：陀螺仪模块
@@ -502,7 +505,7 @@ void UART5_IRQHandler(void)
 }
 
 
-void UART5_Start_Scan(void)//发送扫码指令
+void UART5_Start_Scan(void)//发送扫码指令,因该设置成一直扫码直到扫到停止
 {
 
    uint8_t Order[9]={0x7E,0x00,0x08,0x01,0x00,0x02,0x01,0xAB,0xCD};
@@ -511,19 +514,18 @@ void UART5_Start_Scan(void)//发送扫码指令
 }
 
 
-void UART5_PraseCode(const char *Buf, uint16_t *code1, uint16_t *code2) 
+void UART5_ParseCode(const char *Buf, int16_t *code1, int16_t *code2)
 {
+    // 直接解析第一个三位数
+    *code1 = (Buf[0] - '0') * 100 + 
+            (Buf[1] - '0') * 10 + 
+            (Buf[2] - '0');
 
-    char tempBuf[256];
-    strcpy(tempBuf, Buf);
-
-    char *plusSign = strchr(tempBuf, '+');
-    if (plusSign != NULL) 
-    {
-        *plusSign = '\0';
-        *code1 = atoi(tempBuf);
-        *code2 = atoi(plusSign + 1);
-    } 
+    // 跳过 '+' 号解析第二个三位数
+    *code2 = (Buf[4] - '0') * 100 + 
+            (Buf[5] - '0') * 10 + 
+            (Buf[6] - '0');
+	
 }
 
 

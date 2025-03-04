@@ -35,7 +35,7 @@ int fputc(int ch, FILE *f);
 void USART2_IRQHandler(void);
 uint8_t Serial2_GetRxFlag(void);
 
-void u2_printf(char* fmt,...);
+void u2_printf(char* fmt,...) ;
 
 
 
@@ -47,6 +47,6 @@ uint8_t Serial5_GetRxFlag(void);
 
 void  UART5_IRQHandler(void);
 void UART5_Start_Scan(void);
-void UART5_PraseCode(const char *Buf, uint16_t *code1, uint16_t *code2) ;
+void UART5_ParseCode(const char *Buf, int16_t *code1, int16_t *code2);
 
 #endif

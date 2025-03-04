@@ -7,15 +7,15 @@
 #define camera_position 0       //               扫码的位置
 #define claw_block_get  20       //      地上抓物块的高度
 
-#define put_block_down  0       //      地上放物块的高度
+#define put_block_down  3       //      地上放物块的高度
 
 #define claw_block_get1  90    //     从物料转盘上抓物块的高度
 
-#define claw_block_put   128 //        车上放物块的位置
+#define claw_block_put   135 //        车上放物块的位置
 
 #define get_block_down    128   //       从车上抓取要把物块放下去的位置
 
-#define put_block_down2   98   //     把物块叠放在二层的高度
+#define put_block_down2   90   //     把物块叠放在二层的高度
 
 #define circle_capture1  80   //          靶心识别的位置
 

@@ -41,7 +41,7 @@ extern int distance1;
 
 extern uint8_t servo_angle1;
 extern uint8_t servo_angle2;
-extern uint8_t servo_angle3;
+extern uint16_t servo_angle3;
 
 typedef struct {
   //电机运行状态
