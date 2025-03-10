@@ -567,7 +567,7 @@ void TIM3_IRQHandler(void)
   static signed int rest = 0;
 if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET)
 {
-    TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+     TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
         TIM3->CCR1=srd.step_delay >> 1;//周期的一半
 		TIM3->CCR2=srd.step_delay >> 1;
 		TIM3->CCR3=srd.step_delay >> 1;

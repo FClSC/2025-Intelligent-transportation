@@ -549,11 +549,9 @@ void uart_handle(void)
 	int16_t code1 =0; 
 	int16_t code2 =0; 	
 	uint8_t position_camera = 0;
-//	uint16_t dis_claw = 0;
 	uint8_t claw_mode=0;
 	int8_t move_mode=0;
-//	uint8_t mode_get=0;
-//	uint8_t mode_put=0;
+
 	
 /*收到树莓派发送的数据包的格式：
 0xFF 
@@ -615,7 +613,17 @@ void uart_handle(void)
 		}			
 		case 0x04:  //让单片机扫码
 		{
-			UART5_Start_Scan();			
+			UART5_Start_Scan();//发送扫码指令
+			while(1)//如果没有接收到数据就一直等待
+			{
+				if(Serial5_GetRxFlag() == 1)//接收到了数据就处理
+				{
+					UART5_ParseCode(UART5_RX_BUF,&code1,&code2);//解析出二维码数据，此时UART5_BUX中依然存放的是二维码数据				
+					break;
+				}
+			}
+
+
 			break;
 		}	
 		case 0x05:  //靶心识别x方向
@@ -799,7 +807,7 @@ void uart_handle(void)
 		}
 		case 0x23:
 		{
-
+ 
 			break;
 		}
 		case 0x24:  
@@ -837,20 +845,17 @@ void uart_handle(void)
 		case 0x36 ://54
 		{
 			UART1_SendString(UART5_RX_BUF);  //给树莓派发送二维码信息
-			UART1_SendString(UART5_RX_BUF);  //给树莓派发送二维码信息
-			UART1_SendString(UART5_RX_BUF);  //给树莓派发送二维码信息
-			UART1_SendString(UART5_RX_BUF);  //给树莓派发送二维码信息
-       UART5_ParseCode(UART5_RX_BUF,&code1,&code2);//解析出二维码数据
-			u2_printf("t3.txt=\"%d+%d\"",code1,code2);//多次发送给串口屏
+						
+			u2_printf("tt3.txt=\"%d+%d\"",code1,code2);//多次发送给串口屏
+			delay_ms(10);
+			u2_printf("tt3.txt=\"%d+%d\"",code1,code2);
 			delay_ms(10);
 			u2_printf("t3.txt=\"%d+%d\"",code1,code2);
 			delay_ms(10);
 			u2_printf("t3.txt=\"%d+%d\"",code1,code2);
 			delay_ms(10);
-			u2_printf("t3.txt=\"%d+%d\"",code1,code2);
+			u2_printf("tt3.txt=\"%d+%d\"",code1,code2);
 			delay_ms(10);
-			u2_printf("t3.txt=\"%d+%d\"",code1,code2);
-			delay_ms(100);
 
 			break;
 		}
@@ -1007,7 +1012,7 @@ void claw_down2(void)
 **********************/
 void claw_open(void)//安装的时候需要在这个open的情况下安装
 {
-		servo_angle2=30;
+		servo_angle2=33;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
@@ -1021,7 +1026,7 @@ void claw_open(void)//安装的时候需要在这个open的情况下安装
 **********************/
 void claw_close(void)
 {
-		servo_angle2=65;
+		servo_angle2=71;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
@@ -1072,7 +1077,7 @@ void claw_turn129(void)
 **********************/
 void claw_turn1(void)
 {
-		servo_angle3 = 148;
+		servo_angle3 = 154;
 		SERVO3_CONTRAL(servo_angle3);
 }
 /********************

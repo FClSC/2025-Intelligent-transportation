@@ -35,7 +35,7 @@ void claw_position(int16_t position)
 		pulse=(64*position);
 		distance1=pulse;
 		stepPosition1=0;
-		MSD_Move1(pulse,50,50,100);
+		MSD_Move1(pulse,120,120,150);
 		while(1)
 		{
 			if(stepPosition1 == distance1)
@@ -214,20 +214,20 @@ void claw_get_block(void)
 {
 	claw_turn0();
 	arrive_block_get();
+	delay_ms(200);
 	claw_close();
-	delay_ms(200);
+	delay_ms(300);
 	arrive_most_up();
-	delay_ms(200);
 	claw_turn1();
-	delay_ms(600);
+	delay_ms(800);
 	arrive_car_put();
-	delay_ms(500);
 	claw_open();
+	delay_ms(200);
 	arrive_most_up();
 	claw_turn0();
 	claw_open();
-	delay_ms(200);
 	support_turn120();
+
 }
 
 /********************
@@ -239,22 +239,22 @@ void claw_get_block1(void)
 {
 	claw_turn0();
 	arrive_block_get1();
+	delay_ms(200);
 	claw_close();
 	delay_ms(200);
 	arrive_most_up();
-	delay_ms(200);
 	claw_turn1();
-	delay_ms(500);
+	delay_ms(800);
 	arrive_car_put();
-	delay_ms(300);
 	claw_open();
+	delay_ms(200);
 	arrive_most_up();
 	claw_turn0();
 	claw_open();
 	delay_ms(200);
 	arrive_color_reco();//再次回到识别物料颜色的高度
 	support_turn120();
-
+	
 }
 
 
@@ -266,25 +266,24 @@ void claw_get_block1(void)
 void claw_put_block(void)
 {
  
-	arrive_most_up();
-	delay_ms(300);      
+	arrive_most_up();    
 	claw_turn1();
-	delay_ms(600);
+	delay_ms(1000);
 	arrive_car_get();
-	claw_close();
-	delay_ms(300);	
-	arrive_most_up(); 
-    delay_ms(300); 
-	claw_turn0();
 	delay_ms(300);
+	claw_close();
+	delay_ms(300);
+	arrive_most_up(); 
+    delay_ms(200);
+	claw_turn0();
+    delay_ms(300);
 	arrive_block_put();
 	delay_ms(300);	
 	claw_open();
-	delay_ms(300);
 	arrive_most_up();
 	support_turn120();
+	
 }
-
 
 /********************
 函数功能 : 爪子把物块从车上放到二层
@@ -296,12 +295,12 @@ void claw_put_blockF2(void)
 
 	arrive_most_up();       
 	claw_turn1();
-	delay_ms(600);
+	delay_ms(800);
 	arrive_car_get();
 	claw_close();
 	delay_ms(300);	
 	arrive_most_up(); 
-    delay_ms(300);
+    delay_ms(200);
 	claw_turn0();
 	delay_ms(300);
 	arrive_put_down2();
@@ -311,6 +310,7 @@ void claw_put_blockF2(void)
 	arrive_most_up();
 	delay_ms(300);
 	support_turn120();
+
 }
 
 
