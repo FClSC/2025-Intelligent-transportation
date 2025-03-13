@@ -461,6 +461,27 @@ uint16_t abs_int(int16_t x)
 	if(x>0) return x;
 	else return -x;
 }
+
+/********************
+函数功能 : 绝对值函数
+输入参数 : 浮点值
+输出参数 ：整型
+**********************/
+int16_t abs_float(float x,int8_t y)
+{
+    int16_t z;
+	if(x>y)
+	{
+		z=round(x-y);
+		return z;
+	}
+	else
+	{
+		z=round(y-x);
+		return z;
+	}
+}
+
 /********************
 函数功能 : 得到x与y方向的最大位移的函数
 输入参数 : x的位移，y的位移
@@ -499,8 +520,24 @@ void MOTOR_Displacement(int16_t x_cm,int16_t y_cm)
 	temp=max_Return(x_cm,y_cm);
 	//     3200        x/a = 78/3200     
 	distance=temp*130;  //输入的是cm 
-	MSD_Move(distance,18,18,24);
+	MSD_Move(distance,17,17,35);  //17 17 40 
 }
+
+
+/********************
+函数功能 : 处理小车旋转角度（微调）
+输入参数 : 微调的角度
+输出参数 ：无
+**********************/
+float adjust_float(float x, int8_t y)
+{
+    float z;
+	z=y-x;
+	return z;
+}
+
+
+
 /********************
 函数功能 : 处理小车角度函数
 输入参数 : 逆时针旋转的角度
@@ -510,8 +547,26 @@ void MOTOR_Angle(int8_t angle)
 {
 	MOTOR_TURN(angle);
 	angle_temp = abs_int(angle*50);
-	MSD_Move(angle_temp,6,6,12);
+	MSD_Move(angle_temp,6,6,12);   //10 10 20
 }
+
+/********************
+函数功能 : 处理小车微调角度函数
+输入参数 : 逆时针旋转的角度
+输出参数 ：无
+**********************/
+void MOTOR_Angle_micro(float angle1)
+{
+	int16_t angle2;
+	angle2=angle1*10;
+
+	MOTOR_TURN(angle2);  //旋转方向的处理
+	angle_temp = abs_int(angle2*5);   //注意这个地方是*5，角度变得更精细
+	MSD_Move(angle_temp,6,6,12);   //10 10 20
+}
+
+
+
 /********************
 函数功能 : 处理小车位移函数
 输入参数 : x方向的mm与y方向的mm距离
@@ -527,7 +582,7 @@ void MOTOR_Displacement_mm(int16_t x_mm,int16_t y_mm)
 	temp=max_Return(x_mm,y_mm);
 	//     3200        x/a = 78/3200 
 	distance=temp*13;  //输入的是mm 
-	MSD_Move(distance,4,4,10);//
+	MSD_Move(distance,12,12,20); //改成和国赛一样的速度
 }
 /********************
 函数功能 : 处理上位机发送的消息
@@ -545,6 +600,8 @@ void uart_handle(void)
 	uint8_t y_dis2 = 0;
     int16_t x_dis  = 0;
 	int16_t y_dis  = 0;
+	int8_t x_mdis = 0;
+	int8_t y_mdis = 0;
 	int8_t angle = 0;		
 	int16_t code1 =0; 
 	int16_t code2 =0; 	
@@ -608,7 +665,45 @@ void uart_handle(void)
 				{
 					break;
 				}
-			}			
+			}	
+			// 陀螺仪微调操作
+/*		    delay_ms(100);
+			if(determicro()==1)
+			{
+
+				stepPosition=0;
+				MOTOR_Angle_micro(adjust_float(global_angle,angle));
+				while(1)
+				{
+					if(stepPosition == angle_temp)
+					{
+						break;
+					}
+				}
+
+			}
+			delay_ms(100);
+
+			if(determicro()==1)
+			{
+
+				stepPosition=0;
+				MOTOR_Angle_micro(adjust_float(global_angle,angle));
+				while(1)
+				{
+					if(stepPosition == angle_temp)
+					{
+						break;
+					}
+				}
+
+			}
+			delay_ms(100);
+			ResetAng_Z(); //重置Z轴陀螺仪
+			  
+*/
+
+
 			break;
 		}			
 		case 0x04:  //让单片机扫码
@@ -618,7 +713,18 @@ void uart_handle(void)
 			{
 				if(Serial5_GetRxFlag() == 1)//接收到了数据就处理
 				{
-					UART5_ParseCode(UART5_RX_BUF,&code1,&code2);//解析出二维码数据，此时UART5_BUX中依然存放的是二维码数据				
+					delay_ms(300);//等待数据接收完全
+					UART5_ParseCode(UART5_RX_BUF,&code1,&code2);//解析出二维码数据，此时UART5_BUX中依然存放的是二维码数据	
+					u2_printf("tt3.txt=\"%d+%d\"",code1,code2);//多次发送给串口屏
+					delay_ms(10);
+					u2_printf("tt3.txt=\"%d+%d\"",code1,code2);
+					delay_ms(10);
+					u2_printf("t3.txt=\"%d+%d\"",code1,code2);
+					delay_ms(10);
+					u2_printf("t3.txt=\"%d+%d\"",code1,code2);
+					delay_ms(10);
+					u2_printf("tt3.txt=\"%d+%d\"",code1,code2);
+					delay_ms(10);			
 					break;
 				}
 			}
@@ -628,9 +734,9 @@ void uart_handle(void)
 		}	
 		case 0x05:  //靶心识别x方向
 		{
-			x_dis = Serial_RXPacket[1];
+			x_mdis = Serial_RXPacket[1];
 			stepPosition=0;
-			MOTOR_Displacement_mm(x_dis,0);
+			MOTOR_Displacement_mm(x_mdis,0);
 			while(1)
 			{
 				if(stepPosition == distance)
@@ -642,9 +748,9 @@ void uart_handle(void)
 		}		
 		case 0x06:  //靶心识别y方向
 		{
-			y_dis = Serial_RXPacket[2];
+			y_mdis = Serial_RXPacket[2];
 			stepPosition=0;
-			MOTOR_Displacement_mm(0,y_dis);
+			MOTOR_Displacement_mm(0,y_mdis);
 			while(1)
 			{
 				if(stepPosition == distance)
@@ -686,8 +792,7 @@ void uart_handle(void)
 			{
 				case 0x01:
 				{
-						claw_turn0();
-						arrive_camera();   //到达二维码
+					arrive_camera();   //到达二维码，最低
 					  break;
 				}
 				case 0x02:
@@ -697,12 +802,12 @@ void uart_handle(void)
 				}
 				case 0x03:
 				{
-					arrive_circle_capture();   //到达靶心识别1
+					arrive_circle_capture();   //识别放地上的高度
 					  break;					
 				}	
 				case 0x04:
 				{
-					arrive_put_down2();   //识别二层码垛的高度，有待改变
+					arrive_circle_capture2();   //识别二层码垛的高度
 					break;
 				}
 				default :
@@ -725,9 +830,8 @@ void uart_handle(void)
 					stepPosition1=0;  //抓
 					MOTOR_Displacement(move_mode,0);
 					claw_turn0();
-					delay_ms(100);  //先执行跑的在执行升降的
-					arrive_camera();
-					
+					delay_ms(200);  //先执行跑的在执行升降的
+					arrive_camera();//应该是最低
 					while(1)
 					{
 						if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
@@ -743,7 +847,7 @@ void uart_handle(void)
 					stepPosition1=0;  //抓
 					MOTOR_Displacement(move_mode,0);
 					delay_ms(200);  //先执行跑的在执行升降的
-					arrive_color_reco();  //这个是颜色识别高度？
+					arrive_color_reco();  //这个是颜色识别高度
 					while(1)
 					{
 						if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
@@ -753,6 +857,7 @@ void uart_handle(void)
 					}						
 					break;
 				}
+
 				case 0x03:  // 到达靶心识别1，应该是快要到把心识别的地方用这个，边跑，边降低到这个高度
 				{
 					stepPosition=0;   //跑
@@ -769,8 +874,59 @@ void uart_handle(void)
 					}
 					break;
 				}
-			
-							
+
+				case 0x04:  // 到达码垛高度
+				{
+					stepPosition=0;   //跑
+					stepPosition1=0;  //抓
+					MOTOR_Displacement(move_mode,0);
+					delay_ms(200);  //先执行跑的在执行升降的
+					arrive_circle_capture2();
+					while(1)
+					{
+						if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
+						{
+							break;
+						}
+					}
+					break;
+				}
+				case 0x05:  // 转，升降，走，下降到达物料台识别高度
+				{
+					stepPosition=0;   //跑
+					stepPosition1=0;  //抓
+					MOTOR_Displacement(move_mode,0);
+					claw_turn0();
+					delay_ms(200);  //先执行跑的在执行升降的
+					arrive_color_reco();
+					while(1)
+					{
+						if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
+						{
+							break;
+						}
+					}	
+					break;
+				}				
+				case 0x06:  // 边走边转到到靶心识别1的高度
+				{
+					stepPosition=0;   //跑
+					stepPosition1=0;  //抓
+					MOTOR_Displacement(move_mode,0);
+					claw_turn0();
+					delay_ms(200);  //先执行跑的在执行升降的
+					arrive_circle_capture();
+					while(1)
+					{
+						if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
+						{
+							break;
+						}
+					}	
+					break;
+				}	
+
+
 				default:
 				{
 					break;
@@ -779,9 +935,9 @@ void uart_handle(void)
 			break;
 		}
 
-		case 0x11:               
+		case 0x11:    //物料台旋转120度           
 		{
-
+           support_turn120();
 			
 			break;
 		}
@@ -1006,13 +1162,13 @@ void claw_down2(void)
 //	}
 //}
 /********************
-函数功能 : 爪子的张开
+函数功能 : 爪子的张开，大角度
 输入参数 : 无
 输出参数 ：无
 **********************/
-void claw_open(void)//安装的时候需要在这个open的情况下安装
+void claw_open(void)//
 {
-		servo_angle2=33;
+		servo_angle2=10;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
@@ -1034,13 +1190,13 @@ void claw_close(void)
 }
 
 /********************
-函数功能 : 爪子的张开
+函数功能 : 爪子的小角度张开
 输入参数 : 无
 输出参数 ：无
 **********************/
 void claw_open1(void)
 {
-		servo_angle2=60;
+		servo_angle2=33;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
@@ -1129,7 +1285,7 @@ void claw_turn5(void)
 **********************/
 void support_turn120(void)
 {
-	MSD_Move2(1067,3,3,6);
+	MSD_Move2(1067,4,4,8);
 }
 void support_turn35(void)
 {

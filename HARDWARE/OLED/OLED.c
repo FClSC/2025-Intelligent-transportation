@@ -138,7 +138,7 @@ void OLED_GPIO_Init(void)
 	}
 	
 	/*将SCL和SDA引脚初始化为开漏模式*/
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOF, ENABLE);
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOF, ENABLE);
 	
 	GPIO_InitTypeDef GPIO_InitStructure;
  	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_OD;

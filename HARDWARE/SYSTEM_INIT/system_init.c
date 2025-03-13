@@ -15,6 +15,7 @@ void system_Init(void)
 	//delay_init();
 	UART1_Init();
 	UART2_Init();
+	//UART4_Init();
 	UART5_Init();
 	TIM6_COUNT_Init();
 	delay_ms(50);

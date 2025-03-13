@@ -11,8 +11,14 @@ extern uint8_t Serial_Flag2;
 extern char UART5_RX_BUF[100];
 extern uint8_t Serial_Flag5;
 
+extern volatile float global_angle;
+extern volatile uint8_t new_data_received;
+extern volatile float angular_velocity_y;
+extern volatile float angular_velocity_z;
+extern uint8_t received_data_packet[11];
 
-/********************����1************************/
+
+
 void UART1_Init(void);
 void USART1_SendBits(uint8_t data);
 void UART1_SendArray(uint8_t *array,uint8_t length);
@@ -26,7 +32,7 @@ uint8_t Serial1_GetRxFlag(void);
 void USART1_IRQHandler(void);
 void UART_SendPacket2UP(uint8_t data);
 
-/********************����2************************/
+
 void UART2_Init(void);
 void USART2_SendBits(uint8_t data);
 void USART2_SendString(uint8_t *String1);
@@ -36,16 +42,18 @@ void USART2_IRQHandler(void);
 uint8_t Serial2_GetRxFlag(void);
 void u2_printf(char* fmt,...) ;
 
-//void UART4_Init(void);
-//void Uart4_SendByte(uint8_t byte);
-//void Uart4_SendArray(uint8_t *Array,uint16_t Length);
-//void Uart4_SendString(char* String);
-//uint32_t Uart4_Pow(uint32_t X,uint32_t Y);
-//void Uart4_SendNumber(uint32_t Number,uint8_t Length);
-//void Uart4_Printf(char* format,...);
-//void UART4_IRQHandler(void);
-//void ParseData(uint8_t *data, uint16_t length);
-//uint8_t CalculateChecksum(uint8_t *data, uint16_t length, uint8_t type) ;
+void UART4_Init(void);
+void Uart4_SendByte(uint8_t byte);
+void Uart4_SendArray(uint8_t *Array,uint16_t Length);
+void Uart4_SendString(char* String);
+uint32_t Uart4_Pow(uint32_t X,uint32_t Y);
+void Uart4_SendNumber(uint32_t Number,uint8_t Length);
+void Uart4_Printf(char* format,...);
+void UART4_IRQHandler(void);
+void ParseData(uint8_t *data, uint16_t length);
+uint8_t CalculateChecksum(uint8_t *data, uint16_t length, uint8_t type) ;
+void ResetAng_Z(void);
+int16_t determicro(void);
 
 void UART5_Init(void);
 void USART5_SendBits(uint8_t data);

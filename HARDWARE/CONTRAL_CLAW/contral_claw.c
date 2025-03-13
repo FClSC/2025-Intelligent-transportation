@@ -190,6 +190,18 @@ void arrive_circle_capture(void)
 }
 
 /********************
+函数功能 : 到达二层靶心识别的高度
+输入参数 : 无
+输出参数 ：无
+**********************/
+void arrive_circle_capture2(void)
+{
+	claw.position_target = circle_capture3;
+	claw.position_temp = claw.position_target - claw.position_now;
+	claw_position(claw.position_temp);
+}
+
+/********************
 函数功能 : 到达物料盘识别颜色的高度
 输入参数 : 无
 输出参数 ：无
@@ -213,6 +225,7 @@ void arrive_color_reco(void)
 void claw_get_block(void)
 {
 	claw_turn0();
+	claw_open();
 	arrive_block_get();
 	delay_ms(200);
 	claw_close();
@@ -221,12 +234,29 @@ void claw_get_block(void)
 	claw_turn1();
 	delay_ms(800);
 	arrive_car_put();
-	claw_open();
+	claw_open1();
 	delay_ms(200);
-	arrive_most_up();
-	claw_turn0();
-	claw_open();
+	arrive_most_up();	
 	support_turn120();
+	claw_open();
+
+	// claw_turn0();
+	// arrive_block_get();
+	// delay_ms(200);
+	// claw_close();
+	// delay_ms(300);
+	// arrive_most_up();
+	// claw_turn1();
+	// delay_ms(800);
+	// arrive_car_put();
+	// claw_open();
+	// delay_ms(200);
+	// arrive_most_up();
+	// claw_turn0();
+	// claw_open();
+	// support_turn120();
+
+    
 
 }
 
@@ -246,7 +276,7 @@ void claw_get_block1(void)
 	claw_turn1();
 	delay_ms(800);
 	arrive_car_put();
-	claw_open();
+	claw_open1();
 	delay_ms(200);
 	arrive_most_up();
 	claw_turn0();
@@ -265,10 +295,11 @@ void claw_get_block1(void)
 **********************/
 void claw_put_block(void)
 {
- 
-	arrive_most_up();    
+    
+	arrive_most_up(); 
+	claw_open1();   
 	claw_turn1();
-	delay_ms(1000);
+	delay_ms(800);
 	arrive_car_get();
 	delay_ms(300);
 	claw_close();
@@ -293,7 +324,8 @@ void claw_put_block(void)
 void claw_put_blockF2(void)
 {
 
-	arrive_most_up();       
+	arrive_most_up();
+	claw_open1();       
 	claw_turn1();
 	delay_ms(800);
 	arrive_car_get();
@@ -308,7 +340,6 @@ void claw_put_blockF2(void)
 	claw_open();
 	delay_ms(300);
 	arrive_most_up();
-	delay_ms(300);
 	support_turn120();
 
 }
