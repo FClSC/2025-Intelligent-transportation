@@ -667,7 +667,7 @@ void uart_handle(void)
 				}
 			}	
 			// ÍÓÂİÒÇÎ¢µ÷²Ù×÷
-/*		    delay_ms(100);
+		    delay_ms(100);
 			if(determicro()==1)
 			{
 
@@ -701,7 +701,7 @@ void uart_handle(void)
 			delay_ms(100);
 			ResetAng_Z(); //ÖØÖÃZÖáÍÓÂİÒÇ
 			  
-*/
+
 
 
 			break;

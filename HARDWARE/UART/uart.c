@@ -23,12 +23,10 @@ volatile float angular_velocity_z;
 uint8_t received_data_packet[11];
 
 
-uint8_t unlock_register[] = {0xFF, 0xAA, 0x69, 0x88, 0xB5};
-uint8_t reset_z_axis[] = {0xFF, 0xAA, 0x76, 0x00, 0x00};//Z轴角度归零
-uint8_t set_output_200Hz[] = {0xFF, 0xAA, 0x03, 0x0B, 0x00};//设置输出速率200HZ
-uint8_t set_baudrate_115200[] = {0xFF, 0xAA, 0x04, 0x06, 0x00};//设置波特率
-uint8_t save_settings[] = {0xFF, 0xAA, 0x00, 0x00, 0x00};//保存设置
-uint8_t restart_device[] = {0xFF, 0xAA, 0x00, 0xFF, 0x00};//重启设备
+
+
+
+
 
 
 // PA9    TX
@@ -377,6 +375,8 @@ uint8_t Serial2_GetRxFlag(void)
 	
 
 //串口四：陀螺仪模块
+// 0xFF, 0xAA, 0x76, 0x00, 0x00     Z轴角度归零
+// 0xFF, 0xAA, 0x03, 0x08, 0x00}    设置输出速率50HZ
 ///////////////////////////////
 void UART4_Init(void)
 {
@@ -390,17 +390,16 @@ void UART4_Init(void)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOA, &GPIO_InitStructure);
+	GPIO_Init(GPIOC, &GPIO_InitStructure);
 
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-   GPIO_Init(GPIOB, &GPIO_InitStructure);
-	GPIO_Init(GPIOA, &GPIO_InitStructure); 
+   GPIO_Init(GPIOC, &GPIO_InitStructure);
 	
 	NVIC_InitStructure.NVIC_IRQChannel = UART4_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0 ;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=1 ;//优先级不要过高，占用树莓派
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);	
 
@@ -416,20 +415,20 @@ void UART4_Init(void)
 	
 	USART_Cmd(UART4, ENABLE);
 	
-	//发送配置命令
-	Uart4_SendArray(unlock_register,sizeof(unlock_register));
-	//Uart4_SendArray(reset_z_axis, sizeof(reset_z_axis));
-   Uart4_SendArray(set_output_200Hz, sizeof(set_output_200Hz));
-   Uart4_SendArray(set_baudrate_115200, sizeof(set_baudrate_115200));
-   Uart4_SendArray(save_settings, sizeof(save_settings));
+// 	//发送配置命令
+// 	Uart4_SendArray(unlock_register,sizeof(unlock_register));
+// 	//Uart4_SendArray(reset_z_axis, sizeof(reset_z_axis));
+//    Uart4_SendArray(set_output_200Hz, sizeof(set_output_200Hz));
+//    Uart4_SendArray(set_baudrate_115200, sizeof(set_baudrate_115200));
+//    Uart4_SendArray(save_settings, sizeof(save_settings));
 
 
 }
 
 void Uart4_SendByte(uint8_t byte)
 {
-	USART_SendData(UART4,byte);	
-	while(USART_GetFlagStatus(UART4,USART_FLAG_TXE)==RESET);
+	UART4->DR = byte;
+	while(USART_GetFlagStatus(UART4,USART_FLAG_TXE) == RESET);
 }
 
 void Uart4_SendArray(uint8_t *Array,uint16_t Length)
@@ -591,12 +590,12 @@ uint8_t CalculateChecksum(uint8_t *data, uint16_t length, uint8_t type)
 
 void ResetAng_Z(void)
 {
-	
-  Uart4_SendArray(unlock_register,sizeof(unlock_register));
-  Uart4_SendArray(reset_z_axis, sizeof(reset_z_axis));
-  delay_ms(3000);
-  Uart4_SendArray(save_settings, sizeof(save_settings));
- // Uart4_SendArray(restart_device, sizeof(restart_device));
+	Uart4_SendByte(0xFF);
+	Uart4_SendByte(0xAA);
+	Uart4_SendByte(0x76);
+	Uart4_SendByte(0x00);
+	Uart4_SendByte(0x00);
+	delay_ms(200);
 	
 }
 

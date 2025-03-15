@@ -26,6 +26,13 @@ UART4_RX  PC11
 UART5_TX   PC12
 UART5_RX   PD2
 
+### 按键区
+- 一键启动按钮
+PD0
+
+- LED补光灯控制
+PD3
+
 ### I2C
 - OLED 0.96寸
 SCL    PF15

@@ -8,6 +8,6 @@
 
 
 void LED_Init(void);
-
+void LED_Turn(void);
 
 #endif
