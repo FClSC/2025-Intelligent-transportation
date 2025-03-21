@@ -28,15 +28,15 @@ UART5_RX   PD2
 
 ### 按键区
 - 一键启动按钮
-PD0
+PD0   //PE6
 
 - LED补光灯控制
-PD3
+PD3   //PE3
 
 ### I2C
 - OLED 0.96寸
-SCL    PF15
-SDA    PF13
+SCL    PF15  //PD4
+SDA    PF13  //PD1
 
 ### 舵机区
 - Servo1   ==暂时没有用到==

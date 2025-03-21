@@ -547,7 +547,7 @@ void MOTOR_Angle(int8_t angle)
 {
 	MOTOR_TURN(angle);
 	angle_temp = abs_int(angle*50);
-	MSD_Move(angle_temp,6,6,12);   //10 10 20
+	MSD_Move(angle_temp,15,15,30);   //10 10 20
 }
 
 /********************
@@ -562,7 +562,7 @@ void MOTOR_Angle_micro(float angle1)
 
 	MOTOR_TURN(angle2);  //旋转方向的处理
 	angle_temp = abs_int(angle2*5);   //注意这个地方是*5，角度变得更精细
-	MSD_Move(angle_temp,6,6,12);   //10 10 20
+	MSD_Move(angle_temp,10,10,20);   //10 10 20
 }
 
 

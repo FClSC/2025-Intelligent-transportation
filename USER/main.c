@@ -6,11 +6,16 @@
 
 FClSc 2025/3/15
 
-增加了一键启动按键以及，LED补光灯
 
-陀螺仪烧毁未更换，代码未测试
 
-亟待进行事项：画PCB小板承载多个模块
+亟待进行事项:
+1. PCB小板承载多个模块,进行联合调试
+
+2. 一键启动按键,LED补光灯,OLED代码需要更改引脚以适应新车,以及这些东西在新车运行某个阶段中的调用代码
+
+3. 为了方便调整高度,需要将高度调整的数字,对应到合适的真实高度
+
+4. 陀螺仪在靶心识别的时候校准姿态:需要额外添加一个模式来调用 0x0X
 
 *********************************************/
 
@@ -27,18 +32,33 @@ int main(void)
 	system_Init();
 	contral_motor_Init();
 	claw_Init();
-	claw_turn0();
-	claw_open();
- 	arrive_most_up();
-	claw_turn1();
-	delay_ms(1000);
+	// claw_turn0();
+	// claw_open();
+	// arrive_most_up();
+    //  OLED_Printf(0,16,OLED_8X16,"adjust=%1.f",adjust_float(111.5,90));
+	//  OLED_ShowFloatNum(0,48,adjust_float(111.5,90),3,1,OLED_8X16);
+	//  OLED_Update();
+	//  delay_ms(5000);
+	//  stepPosition=0;
+    // MOTOR_Angle_micro(90);
+	// while(1)
+	// {
+	// 	if(stepPosition == angle_temp)
+	// 	{
+	// 		break;
+	// 	}
+	// }
+	// OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
+	// OLED_Update();
+	// delay_ms(5000);
+	// ResetAng_Z(); //重置Z轴陀螺仪
+	// OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
+	// OLED_Update();
+	// //delay_ms(5000);
 
-
-
-
-	
+//	
 	//test
-	int angle =90;
+	int angle =-90;
 	stepPosition=0;			
 	MOTOR_Angle(angle);
 	while(1)
@@ -50,7 +70,9 @@ int main(void)
 	}	
 
 	// 陀螺仪微调操作
-	delay_ms(100);
+	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
+	OLED_Update();
+	//delay_ms(5000);
 	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
 	OLED_Update();
 	if(determicro()==1)
@@ -69,8 +91,9 @@ int main(void)
 		OLED_Update();
 
 	}
-	delay_ms(100);
-
+	//delay_ms(5000);
+	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
+	OLED_Update();
 	if(determicro()==1)
 	{
 
@@ -87,10 +110,79 @@ int main(void)
 		OLED_Update();
 
 	}
-	delay_ms(100);
+	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
+	OLED_Update();
+	delay_ms(5000);
 	ResetAng_Z(); //重置Z轴陀螺仪
 	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
 	OLED_Update();
+
+
+
+
+
+	angle =10.5;
+	stepPosition=0;			
+	MOTOR_Angle(angle);
+	while(1)
+	{
+		if(stepPosition == angle_temp)
+		{
+			break;
+		}
+	}	
+
+	// 陀螺仪微调操作
+	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
+	OLED_Update();
+	//delay_ms(5000);
+	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
+	OLED_Update();
+	if(determicro()==1)
+	{
+
+		stepPosition=0;
+		MOTOR_Angle_micro(adjust_float(global_angle,angle));
+		while(1)
+		{
+			if(stepPosition == angle_temp)
+			{
+				break;
+			}
+		}
+		OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
+		OLED_Update();
+
+	}
+	//delay_ms(5000);
+	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
+	OLED_Update();
+	if(determicro()==1)
+	{
+
+		stepPosition=0;
+		MOTOR_Angle_micro(adjust_float(global_angle,angle));
+		while(1)
+		{
+			if(stepPosition == angle_temp)
+			{
+				break;
+			}
+		}
+		OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
+		OLED_Update();
+
+	}
+	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
+	OLED_Update();
+	delay_ms(5000);
+	ResetAng_Z(); //重置Z轴陀螺仪
+	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
+	OLED_Update();
+
+
+
+
 
     
         //  claw_get_block();
@@ -106,6 +198,12 @@ int main(void)
 	while(1)              //主代码
 	{
 
+		
+
+		OLED_Printf(0,32,OLED_8X16,"Angle==%.3f",global_angle);
+		OLED_ShowString(0,48,"Yess",OLED_8X16);
+		OLED_Printf(0,16,OLED_8X16,"Yess");
+		OLED_Update();
     //    static int num=0;
 	//    OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
 	//    OLED_Update();
@@ -131,17 +229,25 @@ int main(void)
 	// 	  new_data_received=0;				
 	//   }
 	  
-  
+		if(Key_Get() == 1)//一键启动，如果按下，给树莓派发送启动指令
+		{
+			UART_SendPacket2UP(0x02);
+			UART_SendPacket2UP(0x02);
+			UART_SendPacket2UP(0x02);
+			UART_SendPacket2UP(0x02);
 
+			
+		}  
+     
 
-      if(Serial2_GetRxFlag() == 1)//串口屏，接收到串口屏的点按指示，发送启动指令
-			{
-				UART_SendPacket2UP(0x02);
-				UART_SendPacket2UP(0x02);
-				UART_SendPacket2UP(0x02);
-				UART_SendPacket2UP(0x02);
+    //   if(Serial2_GetRxFlag() == 1)//串口屏，接收到串口屏的点按指示，发送启动指令
+	// 		{
+	// 			UART_SendPacket2UP(0x02);
+	// 			UART_SendPacket2UP(0x02);
+	// 			UART_SendPacket2UP(0x02);
+	// 			UART_SendPacket2UP(0x02);
 				
-			}
+	// 		}
 
 		if(Serial1_GetRxFlag() == 1)//接收树莓派消息
 		{

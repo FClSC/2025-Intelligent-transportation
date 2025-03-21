@@ -329,7 +329,7 @@ void USART2_IRQHandler(void)
 		// 			Serial_Flag2 = 1;
 		// 	}
 		// }
-		if(Rx2Data == 0x02) //串口屏按下按钮会给单片机发送多个0x02，只要收到一个，就会把标志位置1
+		if(Rx2Data == 0x02) //一键启动按下按钮会给单片机发送多个0x02，只要收到一个，就会把标志位置1
 		Serial_Flag2 = 1;
 		USART_ClearITPendingBit(USART2,USART_IT_RXNE);
 	}
@@ -403,7 +403,7 @@ void UART4_Init(void)
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);	
 
-	USART_InitStructure.USART_BaudRate = 115200;
+	USART_InitStructure.USART_BaudRate = 9600;
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;
 	USART_InitStructure.USART_Parity = USART_Parity_No;
@@ -602,7 +602,7 @@ void ResetAng_Z(void)
 int16_t determicro(void)  //决定是否微调
 {
 	//如果旋转后的角度在85-95度之间或者-85到-95之间，返回1，进行微调
-     if(( (global_angle>85) && (global_angle<95) )||( (global_angle<-85) && (global_angle>-95) ) )
+     if(( (global_angle>70) && (global_angle<115) )||( (global_angle<-70) && (global_angle>-115) ) )
      {
 		 return 1;
 	 }
