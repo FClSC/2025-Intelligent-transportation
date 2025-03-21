@@ -1,6 +1,7 @@
 #include "contral.h"
 #include <stdio.h>
 #include <math.h>
+#include "delay.h"
 
 speedRampData srd;
 speedRampData srd1;
@@ -9,6 +10,8 @@ speedRampData srd2;
 uint8_t servo_angle1;
 uint8_t servo_angle2;
 uint16_t servo_angle3;
+
+extern float Angle_Err;  //角度相比较于初始的累计误差
 
 
 int stepPosition = 0;
@@ -520,7 +523,7 @@ void MOTOR_Displacement(int16_t x_cm,int16_t y_cm)
 	temp=max_Return(x_cm,y_cm);
 	//     3200        x/a = 78/3200     
 	distance=temp*130;  //输入的是cm 
-	MSD_Move(distance,17,17,35);  //17 17 40 
+	MSD_Move(distance,50,50,100);  //17 17 40 
 }
 
 
@@ -566,7 +569,98 @@ void MOTOR_Angle_micro(float angle1)
 }
 
 
+/********************
+函数功能 : 在初步旋转后进行两次校准
+输入参数 : 初步旋转的角度
+输出参数 ：无
+**********************/
+void MOTOR_TurnRight(int angle)  
+{
 
+	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
+	OLED_Update();
+	//delay_ms(5000);
+	if(determicro(angle,global_angle)==1)
+	{
+
+		stepPosition=0;
+		MOTOR_Angle_micro(adjust_float(global_angle,angle));
+		while(1)
+		{
+			if(stepPosition == angle_temp)
+			{
+				break;
+			}
+		}
+	}
+	//delay_ms(3000);
+	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
+	OLED_Update();
+	if(determicro(angle,global_angle)==1)
+	{
+
+		stepPosition=0;
+		MOTOR_Angle_micro(adjust_float(global_angle,angle));
+		while(1)
+		{
+			if(stepPosition == angle_temp)
+			{
+				break;
+			}
+		}
+	}
+	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
+	OLED_Update();
+	delay_ms(2000);
+	Angle_Err+=(global_angle-angle);//每次清零Z轴,将误差累积起来
+	ResetAng_Z(); //重置Z轴陀螺仪
+	OLED_ShowFloatNum(0,0,global_angle,3,3,OLED_8X16);
+	OLED_Update();
+
+}
+
+
+/********************
+函数功能 : 靶心识别时候进行姿态矫正(对应陀螺仪上一次清零与0度的差值)
+输入参数 : 无
+输出参数 ：不进行陀螺仪清零,可以在这里利用angle_err消除累计误差
+**********************/
+void MOTOR_Align(void)
+{
+    
+	if(determicro(0,global_angle)==1)
+	{
+
+		stepPosition=0;
+		MOTOR_Angle_micro(adjust_float(global_angle,0));
+		while(1)
+		{
+			if(stepPosition == angle_temp)
+			{
+				break;
+			}
+		}
+	}
+	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
+	OLED_Update();
+
+	if(determicro(0,global_angle)==1)
+	{
+
+		stepPosition=0;
+		MOTOR_Angle_micro(adjust_float(global_angle,0));
+		while(1)
+		{
+			if(stepPosition == angle_temp)
+			{
+				break;
+			}
+		}
+	}
+	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
+	OLED_Update();
+
+}
 /********************
 函数功能 : 处理小车位移函数
 输入参数 : x方向的mm与y方向的mm距离
@@ -666,44 +760,10 @@ void uart_handle(void)
 					break;
 				}
 			}	
-			// 陀螺仪微调操作
-		    delay_ms(100);
-			if(determicro()==1)
-			{
-
-				stepPosition=0;
-				MOTOR_Angle_micro(adjust_float(global_angle,angle));
-				while(1)
-				{
-					if(stepPosition == angle_temp)
-					{
-						break;
-					}
-				}
-
-			}
-			delay_ms(100);
-
-			if(determicro()==1)
-			{
-
-				stepPosition=0;
-				MOTOR_Angle_micro(adjust_float(global_angle,angle));
-				while(1)
-				{
-					if(stepPosition == angle_temp)
-					{
-						break;
-					}
-				}
-
-			}
-			delay_ms(100);
+			// // 陀螺仪微调操作
+		    //MOTOR_TurnRight(angle);
 			ResetAng_Z(); //重置Z轴陀螺仪
 			  
-
-
-
 			break;
 		}			
 		case 0x04:  //让单片机扫码
@@ -816,7 +876,8 @@ void uart_handle(void)
 				}
 			}
 			break;
-		}		
+		}
+
 		case 0X0D:
 		{
 			claw_mode=Serial_RXPacket[1];   //爪子模式
@@ -943,12 +1004,12 @@ void uart_handle(void)
 		}
 		case 0x12:
 		{
-
+           MOTOR_Align();  //靶心识别时候进行姿态矫正
 			break;
 		}
 		case 0x13:
 		{
-
+            ResetAng_Z(); //重置Z轴陀螺仪
 			break;
 		}		
 		case 0x21:  

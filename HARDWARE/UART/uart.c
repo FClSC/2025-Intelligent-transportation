@@ -5,6 +5,7 @@
 #include "stdarg.h"    
 #include "string.h" 
 #include "delay.h"
+#include "math.h"
 
 
 uint8_t Serial_Flag;
@@ -599,10 +600,10 @@ void ResetAng_Z(void)
 	
 }
 
-int16_t determicro(void)  //决定是否微调
+int16_t determicro(int target,float real)  //决定是否微调
 {
 	//如果旋转后的角度在85-95度之间或者-85到-95之间，返回1，进行微调
-     if(( (global_angle>70) && (global_angle<115) )||( (global_angle<-70) && (global_angle>-115) ) )
+     if((fabs(target-real)<20)||(fabs(target-real))>0.1)
      {
 		 return 1;
 	 }

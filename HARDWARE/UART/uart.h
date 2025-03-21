@@ -53,7 +53,7 @@ void UART4_IRQHandler(void);
 void ParseData(uint8_t *data, uint16_t length);
 uint8_t CalculateChecksum(uint8_t *data, uint16_t length, uint8_t type) ;
 void ResetAng_Z(void);
-int16_t determicro(void);
+int16_t determicro(int target,float real);
 
 void UART5_Init(void);
 void USART5_SendBits(uint8_t data);

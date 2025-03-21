@@ -90,6 +90,8 @@ void MOTOR_Displacement(int16_t x_cm,int16_t y_cm);
 float adjust_float(float x, int8_t y);
 void MOTOR_Angle(int8_t angle);
 void MOTOR_Angle_micro(float angle1);
+void MOTOR_TurnRight(int angle);
+void MOTOR_Align(void);
 void MOTOR_Displacement_mm(int16_t x_mm,int16_t y_mm);
 
 void Motor1_DIR(uint8_t a);

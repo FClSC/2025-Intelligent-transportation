@@ -17,6 +17,10 @@ FClSc 2025/3/15
 
 4. 陀螺仪在靶心识别的时候校准姿态:需要额外添加一个模式来调用 0x0X
 
+目前代码陀螺仪旋转90度误差在0.1-0.4度之间,且旋转的速度被增加了
+
+
+可采用一阶低通滤波器对陀螺仪数据进行处理,以减小误差
 *********************************************/
 
 // volatile float global_angle = 0.0;  //偏航角
@@ -25,7 +29,7 @@ FClSc 2025/3/15
 // volatile uint8_t new_data_received = 0;  //新数据接收标志位
 // uint8_t received_data_packet[11] = {0};   //接收到的数据包
 
-
+float Angle_Err=0;
 
 int main(void)
 {		
@@ -33,7 +37,7 @@ int main(void)
 	contral_motor_Init();
 	claw_Init();
 	// claw_turn0();
-	// claw_open();
+	//  claw_open();
 	// arrive_most_up();
     //  OLED_Printf(0,16,OLED_8X16,"adjust=%1.f",adjust_float(111.5,90));
 	//  OLED_ShowFloatNum(0,48,adjust_float(111.5,90),3,1,OLED_8X16);
@@ -58,133 +62,64 @@ int main(void)
 
 //	
 	//test
-	int angle =-90;
-	stepPosition=0;			
-	MOTOR_Angle(angle);
-	while(1)
-	{
-		if(stepPosition == angle_temp)
-		{
-			break;
-		}
-	}	
+	// int angle =-90;
+	// stepPosition=0;			
+	// MOTOR_Angle(angle);
+	// while(1)
+	// {
+	// 	if(stepPosition == angle_temp)
+	// 	{
+	// 		break;
+	// 	}
+	// }	
 
-	// 陀螺仪微调操作
-	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-	OLED_Update();
-	//delay_ms(5000);
-	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-	OLED_Update();
-	if(determicro()==1)
-	{
+    // MOTOR_TurnRight(angle);
+    // delay_ms(5000);
 
-		stepPosition=0;
-		MOTOR_Angle_micro(adjust_float(global_angle,angle));
-		while(1)
-		{
-			if(stepPosition == angle_temp)
-			{
-				break;
-			}
-		}
-		OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-		OLED_Update();
+	// angle =90;
+	// stepPosition=0;			
+	// MOTOR_Angle(angle);
+	// while(1)
+	// {
+	// 	if(stepPosition == angle_temp)
+	// 	{
+	// 		break;
+	// 	}
+	// }	
 
-	}
-	//delay_ms(5000);
-	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-	OLED_Update();
-	if(determicro()==1)
-	{
+	// MOTOR_TurnRight(angle);
+	// delay_ms(5000);
 
-		stepPosition=0;
-		MOTOR_Angle_micro(adjust_float(global_angle,angle));
-		while(1)
-		{
-			if(stepPosition == angle_temp)
-			{
-				break;
-			}
-		}
-		OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-		OLED_Update();
+	// angle =90;
+	// stepPosition=0;			
+	// MOTOR_Angle(angle);
+	// while(1)
+	// {
+	// 	if(stepPosition == angle_temp)
+	// 	{
+	// 		break;
+	// 	}
+	// }	
 
-	}
-	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-	OLED_Update();
-	delay_ms(5000);
-	ResetAng_Z(); //重置Z轴陀螺仪
-	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-	OLED_Update();
+	// MOTOR_TurnRight(angle);
+	// delay_ms(5000);
 
+	// angle =-90;
+	// stepPosition=0;			
+	// MOTOR_Angle(angle);
+	// while(1)
+	// {
+	// 	if(stepPosition == angle_temp)
+	// 	{
+	// 		break;
+	// 	}
+	// }	
 
+	// MOTOR_TurnRight(angle);
 
-
-
-	angle =10.5;
-	stepPosition=0;			
-	MOTOR_Angle(angle);
-	while(1)
-	{
-		if(stepPosition == angle_temp)
-		{
-			break;
-		}
-	}	
-
-	// 陀螺仪微调操作
-	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-	OLED_Update();
-	//delay_ms(5000);
-	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-	OLED_Update();
-	if(determicro()==1)
-	{
-
-		stepPosition=0;
-		MOTOR_Angle_micro(adjust_float(global_angle,angle));
-		while(1)
-		{
-			if(stepPosition == angle_temp)
-			{
-				break;
-			}
-		}
-		OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-		OLED_Update();
-
-	}
-	//delay_ms(5000);
-	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-	OLED_Update();
-	if(determicro()==1)
-	{
-
-		stepPosition=0;
-		MOTOR_Angle_micro(adjust_float(global_angle,angle));
-		while(1)
-		{
-			if(stepPosition == angle_temp)
-			{
-				break;
-			}
-		}
-		OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-		OLED_Update();
-
-	}
-	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-	OLED_Update();
-	delay_ms(5000);
-	ResetAng_Z(); //重置Z轴陀螺仪
-	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-	OLED_Update();
-
-
-
-
-
-    
+    // //delay_ms(5000);
+    // delay_ms(5000);
+	// MOTOR_Align();
         //  claw_get_block();
 		//  delay_ms(1000);
 		//  claw_put_block();
@@ -202,8 +137,9 @@ int main(void)
 
 		OLED_Printf(0,32,OLED_8X16,"Angle==%.3f",global_angle);
 		OLED_ShowString(0,48,"Yess",OLED_8X16);
-		OLED_Printf(0,16,OLED_8X16,"Yess");
+        OLED_ShowFloatNum(0,16,Angle_Err,3,1,OLED_8X16);
 		OLED_Update();
+
     //    static int num=0;
 	//    OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
 	//    OLED_Update();
