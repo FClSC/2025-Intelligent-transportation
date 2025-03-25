@@ -17,10 +17,31 @@ FClSc 2025/3/15
 
 4. 陀螺仪在靶心识别的时候校准姿态:需要额外添加一个模式来调用 0x0X
 
+5.面对新赛题，需要增加一些动作，例如把车上的物块放到转盘，比如这个颜色是红，预判下一个是蓝或者绿色，放上去
+
 目前代码陀螺仪旋转90度误差在0.1-0.4度之间,且旋转的速度被增加了
 
 
 可采用一阶低通滤波器对陀螺仪数据进行处理,以减小误差
+// 示例：一阶低通滤波
+
+
+
+
+// 全局变量
+float filtered_angle = 0.0;
+float alpha = 0.1; // 滤波系数（0.1~0.3）
+
+// 在UART4_IRQHandler或数据解析函数中
+void ParseData(uint8_t *data, uint16_t length) {
+    // ... 原始解析逻辑 ...
+    float raw_angle = ((float)yaw) / 32768.0 * 180.0; // 原始角度
+    filtered_angle = alpha * raw_angle + (1 - alpha) * filtered_angle; // 一阶低通滤波
+    global_angle = filtered_angle; // 更新全局角度
+}
+
+
+
 *********************************************/
 
 // volatile float global_angle = 0.0;  //偏航角
@@ -140,6 +161,7 @@ int main(void)
         OLED_ShowFloatNum(0,16,Angle_Err,3,1,OLED_8X16);
 		OLED_Update();
 
+		
     //    static int num=0;
 	//    OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
 	//    OLED_Update();

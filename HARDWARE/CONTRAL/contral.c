@@ -550,7 +550,7 @@ void MOTOR_Angle(int8_t angle)
 {
 	MOTOR_TURN(angle);
 	angle_temp = abs_int(angle*50);
-	MSD_Move(angle_temp,15,15,30);   //10 10 20
+	MSD_Move(angle_temp,15,15,30);   //张瑞哲 14 14 25
 }
 
 /********************
@@ -564,8 +564,8 @@ void MOTOR_Angle_micro(float angle1)
 	angle2=angle1*10;
 
 	MOTOR_TURN(angle2);  //旋转方向的处理
-	angle_temp = abs_int(angle2*5);   //注意这个地方是*5，角度变得更精细
-	MSD_Move(angle_temp,10,10,20);   //10 10 20
+	angle_temp = abs_int(angle2*5);   //注意这个地方是*5，角度变得更精细，张瑞哲的是*4
+	MSD_Move(angle_temp,10,10,20);   //张瑞哲： 8 8 24
 }
 
 
@@ -611,9 +611,13 @@ void MOTOR_TurnRight(int angle)
 	}
 	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
 	OLED_Update();
-	delay_ms(2000);
+	//delay_ms(2000);
+
 	Angle_Err+=(global_angle-angle);//每次清零Z轴,将误差累积起来
+	ResetAng_Z(); //重置Z轴陀螺仪，多次重置，防止未重置
+	delay_ms(100);
 	ResetAng_Z(); //重置Z轴陀螺仪
+	delay_ms(100);
 	OLED_ShowFloatNum(0,0,global_angle,3,3,OLED_8X16);
 	OLED_Update();
 
@@ -761,7 +765,7 @@ void uart_handle(void)
 				}
 			}	
 			// // 陀螺仪微调操作
-		    //MOTOR_TurnRight(angle);
+		    MOTOR_TurnRight(angle);
 			ResetAng_Z(); //重置Z轴陀螺仪
 			  
 			break;

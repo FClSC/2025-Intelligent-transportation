@@ -8,14 +8,14 @@
 void KEY_Init(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD,ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOE,ENABLE);
 	
 	GPIO_InitStructure.GPIO_Mode=GPIO_Mode_IPD;//下拉输入，正常处于低电平，按下可读取高电平
-	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_0;
+	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_6;
 	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
-	GPIO_Init(GPIOD,&GPIO_InitStructure);
+	GPIO_Init(GPIOE,&GPIO_InitStructure);
 
-	GPIO_ResetBits(GPIOD,GPIO_Pin_0);
+	GPIO_ResetBits(GPIOE,GPIO_Pin_6);
 
 	
 }
@@ -27,10 +27,10 @@ void KEY_Init(void)
 uint8_t Key_Get(void)
 {
 	uint8_t KeyNum = 0;
-	if (GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_0) == 1)
+	if (GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_6) == 1)
 	{
 		delay_ms(20);
-		while (GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_0) == 1);
+		while (GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_6) == 1);
 		delay_ms(20);
 		KeyNum = 1;
 	}
