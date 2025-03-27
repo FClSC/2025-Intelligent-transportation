@@ -4,12 +4,12 @@
 /*********************************************
 
 
-FClSc 2025/3/15
+FClSc 2025/3/25
 
 
 
 亟待进行事项:
-1. PCB小板承载多个模块,进行联合调试
+1.每次爪子高度不是固定的，最低位置并不是0
 
 2. 一键启动按键,LED补光灯,OLED代码需要更改引脚以适应新车,以及这些东西在新车运行某个阶段中的调用代码
 
@@ -19,7 +19,7 @@ FClSc 2025/3/15
 
 5.面对新赛题，需要增加一些动作，例如把车上的物块放到转盘，比如这个颜色是红，预判下一个是蓝或者绿色，放上去
 
-目前代码陀螺仪旋转90度误差在0.1-0.4度之间,且旋转的速度被增加了
+6.扫码从一开始就开始
 
 
 可采用一阶低通滤波器对陀螺仪数据进行处理,以减小误差
@@ -57,111 +57,50 @@ int main(void)
 	system_Init();
 	contral_motor_Init();
 	claw_Init();
-	// claw_turn0();
-	//  claw_open();
-	// arrive_most_up();
-    //  OLED_Printf(0,16,OLED_8X16,"adjust=%1.f",adjust_float(111.5,90));
-	//  OLED_ShowFloatNum(0,48,adjust_float(111.5,90),3,1,OLED_8X16);
-	//  OLED_Update();
-	//  delay_ms(5000);
-	//  stepPosition=0;
-    // MOTOR_Angle_micro(90);
-	// while(1)
-	// {
-	// 	if(stepPosition == angle_temp)
-	// 	{
-	// 		break;
-	// 	}
-	// }
-	// OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-	// OLED_Update();
-	// delay_ms(5000);
-	// ResetAng_Z(); //重置Z轴陀螺仪
-	// OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-	// OLED_Update();
-	// //delay_ms(5000);
-
-//	
-	//test
-	// int angle =-90;
-	// stepPosition=0;			
-	// MOTOR_Angle(angle);
-	// while(1)
-	// {
-	// 	if(stepPosition == angle_temp)
-	// 	{
-	// 		break;
-	// 	}
-	// }	
-
-    // MOTOR_TurnRight(angle);
-    // delay_ms(5000);
-
-	// angle =90;
-	// stepPosition=0;			
-	// MOTOR_Angle(angle);
-	// while(1)
-	// {
-	// 	if(stepPosition == angle_temp)
-	// 	{
-	// 		break;
-	// 	}
-	// }	
-
-	// MOTOR_TurnRight(angle);
-	// delay_ms(5000);
-
-	// angle =90;
-	// stepPosition=0;			
-	// MOTOR_Angle(angle);
-	// while(1)
-	// {
-	// 	if(stepPosition == angle_temp)
-	// 	{
-	// 		break;
-	// 	}
-	// }	
-
-	// MOTOR_TurnRight(angle);
-	// delay_ms(5000);
-
-	// angle =-90;
-	// stepPosition=0;			
-	// MOTOR_Angle(angle);
-	// while(1)
-	// {
-	// 	if(stepPosition == angle_temp)
-	// 	{
-	// 		break;
-	// 	}
-	// }	
-
-	// MOTOR_TurnRight(angle);
-
-    // //delay_ms(5000);
-    // delay_ms(5000);
-	// MOTOR_Align();
-        //  claw_get_block();
-		//  delay_ms(1000);
-		//  claw_put_block();
-		//  delay_ms(1000);
-		//  claw_put_blockF2();
+	arrive_most_up();
+    delay_ms(1000);
+	claw_turn1();
 
 
 
+	// claw_get_block1();
+	// delay_ms(1000);
+	// claw_get_block1();
+	// delay_ms(1000);
+	// claw_get_block1();
+	// delay_ms(1000);
+
+	// claw_get_block();
+	// delay_ms(1000);
+	// claw_get_block();
+	// delay_ms(1000);
+	// claw_get_block();
+	// delay_ms(1000);
+
+	// claw_put_block();
+	// delay_ms(1000);
+	// claw_put_block();
+	// delay_ms(1000);
+	// claw_put_block();
+	// delay_ms(1000);
+
+	// claw_put_blockF2();
+	// delay_ms(1000);
+	// claw_put_blockF2();
+	// delay_ms(1000);
+	// claw_put_blockF2();
+	// delay_ms(1000);
 
 
 	while(1)              //主代码
 	{
-
-		
 
 		OLED_Printf(0,32,OLED_8X16,"Angle==%.3f",global_angle);
 		OLED_ShowString(0,48,"Yess",OLED_8X16);
         OLED_ShowFloatNum(0,16,Angle_Err,3,1,OLED_8X16);
 		OLED_Update();
 
-		
+
     //    static int num=0;
 	//    OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
 	//    OLED_Update();
@@ -192,9 +131,7 @@ int main(void)
 			UART_SendPacket2UP(0x02);
 			UART_SendPacket2UP(0x02);
 			UART_SendPacket2UP(0x02);
-			UART_SendPacket2UP(0x02);
-
-			
+			UART_SendPacket2UP(0x02);		
 		}  
      
 

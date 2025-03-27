@@ -765,7 +765,7 @@ void uart_handle(void)
 				}
 			}	
 			// // ÍÓÂÝÒÇÎ¢µ÷²Ù×÷
-		    MOTOR_TurnRight(angle);
+		    //MOTOR_TurnRight(angle);
 			ResetAng_Z(); //ÖØÖÃZÖáÍÓÂÝÒÇ
 			  
 			break;
@@ -1233,7 +1233,7 @@ void claw_down2(void)
 **********************/
 void claw_open(void)//
 {
-		servo_angle2=10;
+		servo_angle2=0;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
@@ -1247,7 +1247,7 @@ void claw_open(void)//
 **********************/
 void claw_close(void)
 {
-		servo_angle2=71;
+		servo_angle2=73;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
@@ -1261,7 +1261,7 @@ void claw_close(void)
 **********************/
 void claw_open1(void)
 {
-		servo_angle2=33;
+		servo_angle2=49;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
@@ -1275,7 +1275,7 @@ void claw_open1(void)
 **********************/
 void claw_turn0(void)
 {
-		servo_angle3=3;					//56
+		servo_angle3=10;					//56
 		SERVO3_CONTRAL(servo_angle3);      //56
 }
 
@@ -1298,7 +1298,7 @@ void claw_turn129(void)
 **********************/
 void claw_turn1(void)
 {
-		servo_angle3 = 154;
+		servo_angle3 = 162;
 		SERVO3_CONTRAL(servo_angle3);
 }
 /********************
@@ -1350,7 +1350,7 @@ void claw_turn5(void)
 **********************/
 void support_turn120(void)
 {
-	MSD_Move2(1067,4,4,8);
+	MSD_Move2(1067,7,7,14);
 }
 void support_turn35(void)
 {

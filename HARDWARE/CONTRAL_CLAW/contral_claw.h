@@ -3,19 +3,19 @@
 
 #include "system_init.h"
 
-#define claw_most_up    185     //            升到最高的位置            
+#define claw_most_up    195     //            升到最高的位置            
 #define camera_position  20       //               扫码的位置
-#define claw_block_get   25       //      地上抓物块的高度
+#define claw_block_get   28       //      地上抓物块的高度  25
 
-#define put_block_down   26       //      地上放物块的高度
+#define put_block_down   28       //      地上放物块的高度26
 
 #define claw_block_get1  90    //     从物料转盘上抓物块的高度
 
-#define claw_block_put   154 //        车上放物块的位置
+#define claw_block_put   158 //        车上放物块的位置
 
 #define get_block_down    150   //       从车上抓取要把物块放下去的位置
 
-#define put_block_down2   118   //     把物块叠放在二层的高度
+#define put_block_down2   111   //     把物块叠放在二层的高度
 
 #define circle_capture1  80   //          一层放置靶心识别的高度
 
