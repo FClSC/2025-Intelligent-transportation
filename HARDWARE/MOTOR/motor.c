@@ -20,7 +20,7 @@ void MOTOR1_Init(void)
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
 	
-	GPIO_PinRemapConfig(GPIO_FullRemap_TIM2,ENABLE);//被完全重映射了
+	GPIO_PinRemapConfig(GPIO_FullRemap_TIM2,ENABLE);
 	// dir
 	GPIO_InitStructure.GPIO_Mode=GPIO_Mode_Out_PP;
 	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_4;
@@ -567,12 +567,12 @@ void TIM3_IRQHandler(void)
   static signed int rest = 0;
 if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET)
 {
-     TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
-        TIM3->CCR1=srd.step_delay >> 1;//周期的一半
+    TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+    TIM3->CCR1=srd.step_delay >> 1;//周期的一半
 		TIM3->CCR2=srd.step_delay >> 1;
 		TIM3->CCR3=srd.step_delay >> 1;
 		TIM3->CCR4=srd.step_delay >> 1;
-        TIM3->ARR=srd.step_delay;
+    TIM3->ARR=srd.step_delay;
   switch(srd.run_state) {
     case STOP:
       step_count = 0;

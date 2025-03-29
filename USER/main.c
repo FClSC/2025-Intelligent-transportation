@@ -22,6 +22,8 @@ FClSc 2025/3/25
 6.扫码从一开始就开始
 
 
+50 转0
+
 可采用一阶低通滤波器对陀螺仪数据进行处理,以减小误差
 // 示例：一阶低通滤波
 
@@ -40,7 +42,7 @@ void ParseData(uint8_t *data, uint16_t length) {
     global_angle = filtered_angle; // 更新全局角度
 }
 
-
+离谱的问题，一个电机突然方向是反的
 
 *********************************************/
 
@@ -58,16 +60,9 @@ int main(void)
 	contral_motor_Init();
 	claw_Init();
 	arrive_most_up();
-    delay_ms(1000);
+	delay_ms(1000);
 	claw_turn1();
 
-
-
-	// claw_get_block1();
-	// delay_ms(1000);
-	// claw_get_block1();
-	// delay_ms(1000);
-	// claw_get_block1();
 	// delay_ms(1000);
 
 	// claw_get_block();
@@ -76,14 +71,12 @@ int main(void)
 	// delay_ms(1000);
 	// claw_get_block();
 	// delay_ms(1000);
-
 	// claw_put_block();
 	// delay_ms(1000);
 	// claw_put_block();
 	// delay_ms(1000);
 	// claw_put_block();
 	// delay_ms(1000);
-
 	// claw_put_blockF2();
 	// delay_ms(1000);
 	// claw_put_blockF2();
@@ -97,34 +90,12 @@ int main(void)
 
 		OLED_Printf(0,32,OLED_8X16,"Angle==%.3f",global_angle);
 		OLED_ShowString(0,48,"Yess",OLED_8X16);
-        OLED_ShowFloatNum(0,16,Angle_Err,3,1,OLED_8X16);
+    	OLED_ShowFloatNum(0,16,Angle_Err,3,1,OLED_8X16);
 		OLED_Update();
 
 
-    //    static int num=0;
-	//    OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-	//    OLED_Update();
-	//    if(Key_Get()==1)
-	//    {
-		
-	// 	num++;
-    //     ResetAng_Z();//按键按下清零Z轴陀螺仪
-		
-	// 	OLED_ShowNum(16,16,num,3,OLED_8X16);
-	// 	OLED_Update();
-		
-	//    }
-	   //按键启动
-	//   if(new_data_received)//接收到了新的数据
-	//   {
-		  
-        
-    //    OLED_ShowFloatNum(0,16,global_angle,3,4,OLED_8X16);
-	//    OLED_Update();
-    //    delay_s(6);
-	//    ResetAng_Z();
-	// 	  new_data_received=0;				
-	//   }
+
+
 	  
 		if(Key_Get() == 1)//一键启动，如果按下，给树莓派发送启动指令
 		{
@@ -135,14 +106,7 @@ int main(void)
 		}  
      
 
-    //   if(Serial2_GetRxFlag() == 1)//串口屏，接收到串口屏的点按指示，发送启动指令
-	// 		{
-	// 			UART_SendPacket2UP(0x02);
-	// 			UART_SendPacket2UP(0x02);
-	// 			UART_SendPacket2UP(0x02);
-	// 			UART_SendPacket2UP(0x02);
-				
-	// 		}
+
 
 		if(Serial1_GetRxFlag() == 1)//接收树莓派消息
 		{

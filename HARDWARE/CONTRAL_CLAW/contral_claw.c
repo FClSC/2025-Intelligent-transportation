@@ -3,20 +3,19 @@
 CLAW_POSITION claw;
 /********************
 函数功能 : 爪子位置函数  单位mm
-
 输入参数 : 无
 输出参数 ：无
 直径 16mm 
 转一圈  8*2*3.14=50.24 
 x/mm = 3200/50.24
-x = 64*mm   1mm需要64个脉冲
+x = 64*mm
 **********************/
 void claw_position(int16_t position)
 {
 	uint32_t pulse=0;
 	claw.position_now = claw.position_now + position; // 更新当前位置
 	
-	if(claw.position_now<0 || claw.position_now>265)
+	if(claw.position_now<0 || claw.position_now>claw_most_up)
 	{
 		claw.position_now=claw.position_now - position;
 	}
@@ -35,7 +34,7 @@ void claw_position(int16_t position)
 		pulse=(64*position);
 		distance1=pulse;
 		stepPosition1=0;
-		MSD_Move1(pulse,120,120,200); //170 170 200
+		MSD_Move1(pulse,140,140,220); //24 24 30
 		while(1)
 		{
 			if(stepPosition1 == distance1)
@@ -55,7 +54,7 @@ void claw_position2(int16_t position)
 {
 	uint32_t pulse=0;
 	claw.position_now = claw.position_now + position; // 更新当前位置
-	if(claw.position_now<0 || claw.position_now>265)
+	if(claw.position_now<0 || claw.position_now>claw_most_up)
 	{
 		claw.position_now=claw.position_now - position;
 	}
@@ -74,7 +73,7 @@ void claw_position2(int16_t position)
 		pulse=(64*position);
 		distance1=pulse;
 		stepPosition1=0;
-		MSD_Move1(pulse,36,36,45);
+		MSD_Move1(pulse,100,100,200);
 	}
 }
 
@@ -239,24 +238,6 @@ void claw_get_block(void)
 	arrive_most_up();	
 	support_turn120();
 	claw_open();
-
-	// claw_turn0();
-	// arrive_block_get();
-	// delay_ms(200);
-	// claw_close();
-	// delay_ms(300);
-	// arrive_most_up();
-	// claw_turn1();
-	// delay_ms(800);
-	// arrive_car_put();
-	// claw_open();
-	// delay_ms(200);
-	// arrive_most_up();
-	// claw_turn0();
-	// claw_open();
-	// support_turn120();
-
-    
 
 }
 

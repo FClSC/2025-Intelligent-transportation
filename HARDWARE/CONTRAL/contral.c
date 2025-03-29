@@ -163,7 +163,7 @@ void MSD_Move1(signed int step, unsigned int accel, unsigned int decel, unsigned
         srd1.step_delay = 1000;
         TIM_SetAutoreload(TIM2,Pulse_width);
         TIM_SetCompare3(TIM2,Pulse_width_comper); 
-		TIM_SetCompare4(TIM2,Pulse_width_comper); //这一步没必要
+				TIM_SetCompare4(TIM2,Pulse_width_comper); 
         TIM_Cmd(TIM2, ENABLE); 
      }
     else if(step != 0)
@@ -421,11 +421,11 @@ void DIR3(uint8_t a)
 {
 	if(a == CW)
 	{
-		GPIO_ResetBits(GPIOA,GPIO_Pin_8);
+		GPIO_SetBits(GPIOA,GPIO_Pin_8);
 	}
 	else
 	{
-		GPIO_SetBits(GPIOA,GPIO_Pin_8);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_8);
 	}
 }
 // PC1    dir8
@@ -1287,7 +1287,7 @@ void claw_turn0(void)
 **********************/
 void claw_turn129(void)
 {
-		servo_angle3=70;					//230
+		servo_angle3=70;
 		SERVO3_CONTRAL(servo_angle3);			//230
 }
 

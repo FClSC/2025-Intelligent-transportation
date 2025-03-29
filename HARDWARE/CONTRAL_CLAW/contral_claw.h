@@ -4,10 +4,10 @@
 #include "system_init.h"
 
 #define claw_most_up    195     //            升到最高的位置            
-#define camera_position  20       //               扫码的位置
-#define claw_block_get   28       //      地上抓物块的高度  25
+#define camera_position  0       //               扫码的位置
+#define claw_block_get    28      //      地上抓物块的高度  28
 
-#define put_block_down   28       //      地上放物块的高度26
+#define put_block_down   28       //      地上放物块的高度28
 
 #define claw_block_get1  90    //     从物料转盘上抓物块的高度
 
