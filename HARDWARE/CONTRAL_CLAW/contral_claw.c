@@ -327,6 +327,34 @@ void claw_put_blockF2(void)
 
 
 /********************
+函数功能 : 爪子把物块从车上放到转盘高度
+输入参数 : 无
+输出参数 ：无
+**********************/
+void claw_put_block2(void)
+{
+
+	arrive_most_up();
+	claw_open1();       
+	claw_turn1();
+	delay_ms(600);
+	arrive_car_get();
+	claw_close();
+	delay_ms(300);	
+	arrive_most_up(); 
+    delay_ms(200);
+	claw_turn0();
+	delay_ms(300);
+	arrive_block_get1();//和抓物料的高度一样先
+	delay_ms(500);	
+	claw_open();
+	delay_ms(300);
+	arrive_most_up();
+	support_turn120();
+
+}
+
+/********************
 函数功能 : 爪子归位
 输入参数 : 无
 输出参数 ：无

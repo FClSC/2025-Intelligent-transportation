@@ -523,7 +523,7 @@ void MOTOR_Displacement(int16_t x_cm,int16_t y_cm)
 	temp=max_Return(x_cm,y_cm);
 	//     3200        x/a = 78/3200     
 	distance=temp*130;  //输入的是cm 
-	MSD_Move(distance,50,50,100);  //17 17 40 
+	MSD_Move(distance,20,20,40);  //17 17 40 
 }
 
 
@@ -1015,7 +1015,13 @@ void uart_handle(void)
 		{
             ResetAng_Z(); //重置Z轴陀螺仪
 			break;
-		}		
+		}	
+		case 0x14:
+		{
+			claw_put_block2();
+           //把物块放到转盘上面
+
+		}	
 		case 0x21:  
 		{
 			
@@ -1231,7 +1237,8 @@ void claw_down2(void)
 输入参数 : 无
 输出参数 ：无
 **********************/
-void claw_open(void)//
+
+void claw_open(void)
 {
 		servo_angle2=0;
 		SERVO2_CONTRAL(servo_angle2);
