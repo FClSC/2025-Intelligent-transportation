@@ -107,6 +107,7 @@ void claw_down3(void);
 void claw_open(void);
 void claw_open1(void);
 void claw_close(void);
+void claw_close2(void);
 void claw_turn0(void);
 void claw_turn129(void);
 void support_turn120(void);

@@ -1016,35 +1016,34 @@ void uart_handle(void)
             ResetAng_Z(); //重置Z轴陀螺仪
 			break;
 		}	
-		case 0x14:
+		case 0x14://把物块放到转盘上面
 		{
 			claw_put_block2();
-           //把物块放到转盘上面
-
+			break;
 		}	
-		case 0x21:  
+		case 0x21:  //物料盘抓物块2放车上
 		{
-			
+			claw_get2_block1(); 
 			break;
 		}
-		case 0x22:
+		case 0x22:  //地面抓物块2放车上
 		{
-
+            claw_get2_block();
 			break;
 		}
-		case 0x23:
+		case 0x23:  //从车上抓物块2放地上
 		{
- 
+            claw_put2_block();
 			break;
 		}
-		case 0x24:  
+		case 0x24:  //从车上抓物块2放二层
 		{
-             
+			claw_put2_blockF2();
 			 break;
 		}
-		case 0x25:  
+		case 0x25:  //从车上抓物块2放转盘
 		{
-
+            claw_put2_block2();
 			 break;
 		}
 		case 0x26: 
@@ -1248,7 +1247,7 @@ void claw_open(void)
 }
 
 /********************
-函数功能 : 爪子的关闭
+函数功能 : 爪子的关闭，对于经典物块
 输入参数 : 无
 输出参数 ：无
 **********************/
@@ -1262,7 +1261,22 @@ void claw_close(void)
 }
 
 /********************
-函数功能 : 爪子的小角度张开
+函数功能 : 爪子的关闭，对于决赛物块
+输入参数 : 无
+输出参数 ：无
+**********************/
+void claw_close2(void)
+{
+		servo_angle2=73;
+		SERVO2_CONTRAL(servo_angle2);
+		delay_ms(25);
+		SERVO2_CONTRAL(servo_angle2);
+		delay_ms(25);	
+}
+
+
+/********************
+函数功能 : 爪子的小角度张开，防止放物块打到
 输入参数 : 无
 输出参数 ：无
 **********************/
