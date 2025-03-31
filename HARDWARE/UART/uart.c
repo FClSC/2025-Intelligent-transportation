@@ -17,7 +17,9 @@ uint8_t Serial_RXPacket[8];
 uint8_t USART2_TX_BUF[100];
 
 
-volatile float global_angle;
+volatile float global_angle=0.0;
+volatile float filtered_angle = 0.0;
+volatile float alpha = 0.1; // 滤波系数（0.1~0.3）
 volatile uint8_t new_data_received;
 volatile float angular_velocity_y;
 volatile float angular_velocity_z;
@@ -250,7 +252,7 @@ void UART2_Init(void)
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);	
 	
-	USART_InitStructure.USART_BaudRate = 115200;
+	USART_InitStructure.USART_BaudRate = 9600;
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;
 	USART_InitStructure.USART_Parity = USART_Parity_No;
@@ -555,8 +557,12 @@ void ParseData(uint8_t *data, uint16_t length)
            int16_t yaw = (int16_t)((yaw_h << 8) | yaw_l);
 
            // 将解析后的整数值转换为角度
-           float angle = ((float)yaw / 32768.0) * 180.0;   //只需要这个即可
-           global_angle = angle;
+		   float raw_angle = ((float)yaw) / 32768.0 * 180.0; // 原始角度
+		   filtered_angle = alpha * raw_angle + (1 - alpha) * filtered_angle; // 一阶低通滤波
+		   global_angle = filtered_angle; // 更新全局角度
+
+           //float angle = ((float)yaw / 32768.0) * 180.0;   //只需要这个即可
+           //global_angle = angle;
            new_data_received = 1;
        }
         else if (data[0] == 0x55 && data[1] == 0x52) 

@@ -4,6 +4,17 @@
 #include "system_init.h"
 
 //通用高度
+/*对于物料转盘抓取时候的80-100mm
+转盘  物块5.5cm处爪子高度
+80mm  13.5cm 99
+
+90mm 14.5cm  111
+
+100mm 15.5cm 123
+
+计算公式为：爪子脉冲高度=99+(转盘实际高度-80)/20*24
+
+*/
 #define claw_most_up    175     //            升到最高的位置            
 #define camera_position  0       //               扫码的位置（最低）
 #define circle_capture1  0   //          一层放置靶心识别的高度

@@ -14,6 +14,7 @@ uint16_t servo_angle3;
 extern float Angle_Err;  //角度相比较于初始的累计误差
 
 
+
 int stepPosition = 0;
 int stepPosition1 = 0;
 int stepPosition2 = 0;
@@ -701,8 +702,6 @@ void uart_handle(void)
 	int8_t x_mdis = 0;
 	int8_t y_mdis = 0;
 	int8_t angle = 0;		
-	int16_t code1 =0; 
-	int16_t code2 =0; 	
 	uint8_t position_camera = 0;
 	uint8_t claw_mode=0;
 	int8_t move_mode=0;
@@ -764,10 +763,12 @@ void uart_handle(void)
 					break;
 				}
 			}	
-			// // 陀螺仪微调操作
+
+			//陀螺仪微调操作
 		    //MOTOR_TurnRight(angle);
+			Angle_Err+=(global_angle-angle);
 			ResetAng_Z(); //重置Z轴陀螺仪
-			  
+
 			break;
 		}			
 		case 0x04:  //让单片机扫码
@@ -777,6 +778,8 @@ void uart_handle(void)
 			{
 				if(Serial5_GetRxFlag() == 1)//接收到了数据就处理
 				{
+					int16_t code1 =0; 
+					int16_t code2 =0; 	
 					delay_ms(300);//等待数据接收完全
 					UART5_ParseCode(UART5_RX_BUF,&code1,&code2);//解析出二维码数据，此时UART5_BUX中依然存放的是二维码数据	
 					u2_printf("tt3.txt=\"%d+%d\"",code1,code2);//多次发送给串口屏
@@ -1071,7 +1074,9 @@ void uart_handle(void)
 		case 0x36 ://54
 		{
 			UART1_SendString(UART5_RX_BUF);  //给树莓派发送二维码信息
-						
+			int16_t code1 =0; 
+			int16_t code2 =0; 	
+			UART5_ParseCode(UART5_RX_BUF,&code1,&code2);//解析出二维码数据，此时UART5_BUX中依然存放的是二维码数据	
 			u2_printf("tt3.txt=\"%d+%d\"",code1,code2);//多次发送给串口屏
 			delay_ms(10);
 			u2_printf("tt3.txt=\"%d+%d\"",code1,code2);
@@ -1081,7 +1086,7 @@ void uart_handle(void)
 			u2_printf("t3.txt=\"%d+%d\"",code1,code2);
 			delay_ms(10);
 			u2_printf("tt3.txt=\"%d+%d\"",code1,code2);
-			delay_ms(10);
+			delay_ms(10);		
 
 			break;
 		}
@@ -1239,7 +1244,7 @@ void claw_down2(void)
 
 void claw_open(void)
 {
-		servo_angle2=0;
+		servo_angle2=15;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
@@ -1253,7 +1258,7 @@ void claw_open(void)
 **********************/
 void claw_close(void)
 {
-		servo_angle2=73;
+		servo_angle2=95;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
@@ -1282,7 +1287,7 @@ void claw_close2(void)
 **********************/
 void claw_open1(void)
 {
-		servo_angle2=49;
+		servo_angle2=74;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
