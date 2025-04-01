@@ -557,12 +557,12 @@ void ParseData(uint8_t *data, uint16_t length)
            int16_t yaw = (int16_t)((yaw_h << 8) | yaw_l);
 
            // 将解析后的整数值转换为角度
-		   float raw_angle = ((float)yaw) / 32768.0 * 180.0; // 原始角度
-		   filtered_angle = alpha * raw_angle + (1 - alpha) * filtered_angle; // 一阶低通滤波
-		   global_angle = filtered_angle; // 更新全局角度
+		//    float raw_angle = ((float)yaw) / 32768.0 * 180.0; // 原始角度
+		//    filtered_angle = alpha * raw_angle + (1 - alpha) * filtered_angle; // 一阶低通滤波
+		//    global_angle = filtered_angle; // 更新全局角度
 
-           //float angle = ((float)yaw / 32768.0) * 180.0;   //只需要这个即可
-           //global_angle = angle;
+           float angle = ((float)yaw / 32768.0) * 180.0;   //只需要这个即可
+           global_angle = angle;
            new_data_received = 1;
        }
         else if (data[0] == 0x55 && data[1] == 0x52) 
@@ -609,7 +609,7 @@ void ResetAng_Z(void)
 int16_t determicro(int target,float real)  //决定是否微调
 {
 	//如果旋转后的角度在85-95度之间或者-85到-95之间，返回1，进行微调
-     if((fabs(target-real)<20)||(fabs(target-real))>0.1)
+     if((fabs(target-real)<20)&&(fabs(target-real))>0.1)
      {
 		 return 1;
 	 }

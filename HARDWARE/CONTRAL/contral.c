@@ -683,6 +683,26 @@ void MOTOR_Displacement_mm(int16_t x_mm,int16_t y_mm)
 	distance=temp*13;  //输入的是mm 
 	MSD_Move(distance,12,12,20); //改成和国赛一样的速度
 }
+
+/********************
+函数功能 : 处理小车位移函数
+输入参数 : x方向的0.1mm与y方向的0.1mm距离
+输出参数 ：无
+**********************/
+void MOTOR_Displacement_fm(int16_t x_fm,int16_t y_fm)
+{
+	int temp=0;
+	distance=0;
+	// 先判断方向
+	MOTOR_Direction(x_fm,y_fm);
+	// 运动控制
+	temp=max_Return(x_fm,y_fm);
+	//     3200        x/a = 78/3200 
+	distance=(int)(temp*1.3);  //输入的是0.1mm,即自定义的1fm
+	MSD_Move(distance,5,5,10);
+	 
+}
+
 /********************
 函数功能 : 处理上位机发送的消息
 输入参数 : 无
@@ -763,7 +783,7 @@ void uart_handle(void)
 					break;
 				}
 			}	
-
+            delay_ms(200);
 			//陀螺仪微调操作
 		    //MOTOR_TurnRight(angle);
 			Angle_Err+=(global_angle-angle);
@@ -818,6 +838,40 @@ void uart_handle(void)
 			y_mdis = Serial_RXPacket[2];
 			stepPosition=0;
 			MOTOR_Displacement_mm(0,y_mdis);
+			while(1)
+			{
+				if(stepPosition == distance)
+				{
+					break;
+				}
+			}
+			break;
+		}	
+		case 0x15:  //精细靶心识别x方向-0.1mm
+		{
+			x_dis1 = Serial_RXPacket[1];
+			x_dis2 = Serial_RXPacket[2];
+			temp_dis =  (x_dis1 << 8) | x_dis2 ;
+			x_dis  = (int16_t)temp_dis;
+			stepPosition=0;
+			MOTOR_Displacement_fm(x_dis,0);
+			while(1)
+			{
+				if(stepPosition == distance)
+				{
+					break;
+				}
+			}
+			break;
+		}		
+		case 0x16:  //精细靶心识别y方向-0.1mm
+		{
+            y_dis1 = Serial_RXPacket[1];
+			y_dis2 = Serial_RXPacket[2];
+			temp_dis =  (y_dis1 << 8) | y_dis2 ;
+			y_dis  = (int16_t)temp_dis;
+			stepPosition=0;
+			MOTOR_Displacement_fm(0,y_dis);
 			while(1)
 			{
 				if(stepPosition == distance)

@@ -87,6 +87,7 @@ int16_t abs_float(float x,int8_t y);
 uint16_t max_Return(int16_t x,int16_t y);
 void MOTOR_TURN(int16_t angle);
 void MOTOR_Displacement(int16_t x_cm,int16_t y_cm);
+void MOTOR_Displacement_fm(int16_t x_fm,int16_t y_fm);
 float adjust_float(float x, int8_t y);
 void MOTOR_Angle(int8_t angle);
 void MOTOR_Angle_micro(float angle1);
