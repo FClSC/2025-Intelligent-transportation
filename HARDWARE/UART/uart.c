@@ -18,8 +18,6 @@ uint8_t USART2_TX_BUF[100];
 
 
 volatile float global_angle=0.0;
-volatile float filtered_angle = 0.0;
-volatile float alpha = 0.1; // ÂË²¨ÏµÊý£¨0.1~0.3£©
 volatile uint8_t new_data_received;
 volatile float angular_velocity_y;
 volatile float angular_velocity_z;
