@@ -11,7 +11,7 @@ uint8_t servo_angle1;
 uint8_t servo_angle2;
 uint16_t servo_angle3;
 
-extern int8_t base_angle; 
+extern int16_t base_angle; 
 
 
 
@@ -533,7 +533,7 @@ void MOTOR_Displacement(int16_t x_cm,int16_t y_cm)
 输入参数 : 微调的角度
 输出参数 ：无
 **********************/
-float adjust_float(float x, int8_t y)
+float adjust_float(float x, int16_t y)
 {
     float z;
 	z=y-x;
@@ -633,6 +633,97 @@ void MOTOR_TurnRight(int angle)
 void MOTOR_Align(void)
 {
     
+//180/-180情况
+    if((global_angle>150&&global_angle<180)||(global_angle<-150&&global_angle>-180))
+   	{
+        
+		if(global_angle>0)  //转少了，要顺时针旋转纠偏
+		{
+			stepPosition=0;
+			MOTOR_Angle_micro(fabs(fabs(global_angle)-fabs(base_angle)));
+			while(1)
+			{
+				if(stepPosition == angle_temp)
+				{
+					break;
+				}
+			}
+		}
+
+		else if(global_angle<0)  //转多了，要逆时针旋转纠偏
+		{
+			stepPosition=0;
+			MOTOR_Angle_micro(-fabs(fabs(global_angle)-fabs(base_angle)));
+			while(1)
+			{
+				if(stepPosition == angle_temp)
+				{
+					break;
+				}
+			}
+		}
+        
+        delay_ms(100);
+
+
+		 if(global_angle>0)  //转少了，要顺时针旋转纠偏
+		 {
+			 stepPosition=0;
+			 MOTOR_Angle_micro(fabs(fabs(global_angle)-fabs(base_angle)));
+			 while(1)
+			 {
+				 if(stepPosition == angle_temp)
+				 {
+					 break;
+				 }
+			 }
+		 }
+ 
+		 else if(global_angle<0)  //转多了，要逆时针旋转纠偏
+		 {
+			 stepPosition=0;
+			 MOTOR_Angle_micro(-fabs(fabs(global_angle)-fabs(base_angle)));
+			 while(1)
+			 {
+				 if(stepPosition == angle_temp)
+				 {
+					 break;
+				 }
+			 }
+		 }
+		 delay_ms(100);
+		 if(global_angle>0)  //转少了，要顺时针旋转纠偏
+		 {
+			 stepPosition=0;
+			 MOTOR_Angle_micro(fabs(fabs(global_angle)-fabs(base_angle)));
+			 while(1)
+			 {
+				 if(stepPosition == angle_temp)
+				 {
+					 break;
+				 }
+			 }
+		 }
+ 
+		 else if(global_angle<0)  //转多了，要逆时针旋转纠偏
+		 {
+			 stepPosition=0;
+			 MOTOR_Angle_micro(-fabs(fabs(global_angle)-fabs(base_angle)));
+			 while(1)
+			 {
+				 if(stepPosition == angle_temp)
+				 {
+					 break;
+				 }
+			 }
+		 }
+
+
+	}
+
+//非180/-180情况
+else{
+
 	if(determicro(base_angle,global_angle)==1)
 	{
 
@@ -673,6 +764,7 @@ void MOTOR_Align(void)
 			}
 		}
 	}
+}
 
 
 }

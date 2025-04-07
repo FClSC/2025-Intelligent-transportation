@@ -21,6 +21,8 @@ FClSc 2025/4/2
 
 5.脉冲移动不准，修改计算
 
+6.小板子需要改成适配新的扫码模块的5V与走线
+
 可采用一阶低通滤波器对陀螺仪数据进行处理,以减小误差
 // 示例：一阶低通滤波
 // 全局变量
@@ -38,8 +40,9 @@ void ParseData(uint8_t *data, uint16_t length) {
 
 *********************************************/
 
-int8_t base_angle = 0; //基准角度,根据上位机要求角度跟随用，比如上位机调用转90度，基准角度会加90度，反方向会减去90度
+int16_t base_angle = 0; //基准角度,根据上位机要求角度跟随用，比如上位机调用转90度，基准角度会加90度，反方向会减去90度
 //也就是相对于初始Z轴0度的偏角
+
 
 int main(void)
 {		
@@ -50,6 +53,65 @@ int main(void)
 	arrive_most_up();
 	delay_ms(1000);
 	claw_turn1();
+
+	// delay_ms(5000);
+
+	// base_angle +=90;
+	// stepPosition=0;		
+	// MOTOR_Angle(81);
+	// while(1)
+	// {
+	// 	if(stepPosition == angle_temp)
+	// 	{
+	// 		break;
+	// 	}
+	// }	
+	// delay_ms(100);
+	// MOTOR_Align(); //姿态矫正，陀螺仪清零
+
+	// base_angle -=90;
+	// stepPosition=0;		
+	// MOTOR_Angle(-81);
+	// while(1)
+	// {
+	// 	if(stepPosition == angle_temp)
+	// 	{
+	// 		break;
+	// 	}
+	// }	
+	// delay_ms(100);
+
+	// MOTOR_Align(); //姿态矫正，陀螺仪清零
+
+	// base_angle -=90;
+	// stepPosition=0;		
+	// MOTOR_Angle(-81);
+	// while(1)
+	// {
+	// 	if(stepPosition == angle_temp)
+	// 	{
+	// 		break;
+	// 	}
+	// }	
+	// delay_ms(100);
+
+	// MOTOR_Align(); //姿态矫正，陀螺仪清零
+
+
+	// base_angle +=90;
+	// stepPosition=0;		
+	// MOTOR_Angle(81);
+	// while(1)
+	// {
+	// 	if(stepPosition == angle_temp)
+	// 	{
+	// 		break;
+	// 	}
+	// }	
+	// delay_ms(100);
+	// MOTOR_Align(); //姿态矫正，陀螺仪清零
+
+
 
 
 	
