@@ -11,7 +11,7 @@ uint8_t servo_angle1;
 uint8_t servo_angle2;
 uint16_t servo_angle3;
 
-extern float Angle_Err;  //角度相比较于初始的累计误差
+extern int8_t base_angle; 
 
 
 
@@ -614,7 +614,7 @@ void MOTOR_TurnRight(int angle)
 	OLED_Update();
 	//delay_ms(2000);
 
-	Angle_Err+=(global_angle-angle);//每次清零Z轴,将误差累积起来
+	
 	ResetAng_Z(); //重置Z轴陀螺仪，多次重置，防止未重置
 	delay_ms(100);
 	ResetAng_Z(); //重置Z轴陀螺仪
@@ -626,18 +626,18 @@ void MOTOR_TurnRight(int angle)
 
 
 /********************
-函数功能 : 靶心识别时候进行姿态矫正(对应陀螺仪上一次清零与0度的差值)
+函数功能 : 靶心识别/转弯前后进行姿态矫正(对应基准角度与全局角度的差值)
 输入参数 : 无
-输出参数 ：不进行陀螺仪清零,可以在这里利用angle_err消除累计误差
+输出参数 ：不进行陀螺仪清零
 **********************/
 void MOTOR_Align(void)
 {
     
-	if(determicro(0,global_angle)==1)
+	if(determicro(base_angle,global_angle)==1)
 	{
 
 		stepPosition=0;
-		MOTOR_Angle_micro(adjust_float(global_angle,0));
+		MOTOR_Angle_micro(adjust_float(global_angle,base_angle));
 		while(1)
 		{
 			if(stepPosition == angle_temp)
@@ -646,14 +646,12 @@ void MOTOR_Align(void)
 			}
 		}
 	}
-	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-	OLED_Update();
+	delay_ms(100);
 
-	if(determicro(0,global_angle)==1)
+	if(determicro(base_angle,global_angle)==1)
 	{
-
 		stepPosition=0;
-		MOTOR_Angle_micro(adjust_float(global_angle,0));
+		MOTOR_Angle_micro(adjust_float(global_angle,base_angle));
 		while(1)
 		{
 			if(stepPosition == angle_temp)
@@ -662,8 +660,20 @@ void MOTOR_Align(void)
 			}
 		}
 	}
-	OLED_ShowFloatNum(0,0,global_angle,3,1,OLED_8X16);
-	OLED_Update();
+	delay_ms(100);
+	if(determicro(base_angle,global_angle)==1)
+	{
+		stepPosition=0;
+		MOTOR_Angle_micro(adjust_float(global_angle,base_angle));
+		while(1)
+		{
+			if(stepPosition == angle_temp)
+			{
+				break;
+			}
+		}
+	}
+
 
 }
 /********************
@@ -774,7 +784,11 @@ void uart_handle(void)
 		case 0x03:  //角度
 		{
 			angle = Serial_RXPacket[3];
-			stepPosition=0;			
+
+			if(angle>0) base_angle+=90; //如果是正角度，基准角度加90
+			else base_angle-=90; //如果是负角度，基准角度减90
+
+			stepPosition=0;		
 			MOTOR_Angle(angle);
 			while(1)
 			{
@@ -783,11 +797,10 @@ void uart_handle(void)
 					break;
 				}
 			}	
-            delay_ms(200);
-			//陀螺仪微调操作
-		    //MOTOR_TurnRight(angle);
-			Angle_Err+=(global_angle-angle);
-			ResetAng_Z(); //重置Z轴陀螺仪
+            delay_ms(100);
+
+			//陀螺仪微调操作，不清零Z轴陀螺仪，使用基准角度跟随上位机调用的角度变化，微调即为让其转正
+			//是上位机调用Motor_Align()函数来实现
 
 			break;
 		}			
@@ -1065,7 +1078,7 @@ void uart_handle(void)
 		}
 		case 0x12:
 		{
-           MOTOR_Align();  //靶心识别时候进行姿态矫正
+           MOTOR_Align();  //靶心识别与转弯前/后进行姿态矫正
 			break;
 		}
 		case 0x13:

@@ -38,7 +38,8 @@ void ParseData(uint8_t *data, uint16_t length) {
 
 *********************************************/
 
-float Angle_Err=0;
+int8_t base_angle = 0; //基准角度,根据上位机要求角度跟随用，比如上位机调用转90度，基准角度会加90度，反方向会减去90度
+//也就是相对于初始Z轴0度的偏角
 
 int main(void)
 {		
@@ -50,12 +51,14 @@ int main(void)
 	delay_ms(1000);
 	claw_turn1();
 
+
 	
 	while(1)              //主代码
 	{
 
-		OLED_Printf(0,16,OLED_8X16,"Angle=%.3f",global_angle);
-		OLED_Printf(0,32,OLED_8X16,"Angle_Err=%.3f",Angle_Err);
+		OLED_Printf(0,0,OLED_8X16,"Angle=%.3f",global_angle);
+		OLED_Printf(0,16,OLED_8X16,"BaseAngle=%d",base_angle);
+		OLED_Printf(0,32,OLED_8X16,"Err_Angle=%.3f",global_angle-base_angle);
 		OLED_Printf(0,48,OLED_8X16,"Code=");
         OLED_Printf(64,48,OLED_8X16,UART5_RX_BUF);
 		OLED_Update();
