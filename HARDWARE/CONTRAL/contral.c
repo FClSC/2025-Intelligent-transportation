@@ -903,7 +903,7 @@ void uart_handle(void)
 
 			//陀螺仪微调操作，不清零Z轴陀螺仪，使用基准角度跟随上位机调用的角度变化，微调即为让其转正
 			//是上位机调用Motor_Align()函数来实现
-			MOTOR_Align();
+			//MOTOR_Align();
 
 			break;
 		}			
