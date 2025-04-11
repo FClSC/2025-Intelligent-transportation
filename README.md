@@ -85,3 +85,7 @@ PC9  STEP        PB1重映射而来，TIM3_CH4   *==GPIO_PinRemapConfig(GPIO_Ful
 > 物块旋转台挂载在一个定时器TIM4的一个输出通道CH3上
 > 空闲两个电机 MOTOR2和MOTOR6分别是TIM2_CH4和TIM4_CH4
 > TIM2和TIM3进行了完全重映射
+> 三个舵机用了TIM5的三个通道
+
+
+TIM1_CH4  可以用来输出PWM驱动ws2812

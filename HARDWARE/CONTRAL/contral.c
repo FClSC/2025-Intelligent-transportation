@@ -634,7 +634,7 @@ void MOTOR_Align(void)
 {
     
 //180/-180情况
-    if((global_angle>150&&global_angle<180)||(global_angle<-150&&global_angle>-180))
+    if((global_angle>150&&global_angle<180)||(global_angle<-150&&global_angle>-180)/*base_angle==180||base_angle==-180*/)
    	{
         
 		if(global_angle>0)  //转少了，要顺时针旋转纠偏
@@ -876,10 +876,6 @@ void uart_handle(void)
 		case 0x03:  //角度
 		{
 			angle = Serial_RXPacket[3];
-
-			if(angle>0) base_angle+=90; //如果是正角度，基准角度加90
-			else base_angle-=90; //如果是负角度，基准角度减90
-
 			stepPosition=0;		
 			MOTOR_Angle(angle);
 			while(1)
@@ -889,10 +885,25 @@ void uart_handle(void)
 					break;
 				}
 			}	
+
+
+			if(angle>0)base_angle+=90; 
+			else base_angle-=90;
+
+			if(base_angle>180)//270
+			{
+				base_angle=-90;
+			}
+			else if(base_angle<-180)//-270
+			{
+				base_angle=90; 
+			}
+
             delay_ms(100);
 
 			//陀螺仪微调操作，不清零Z轴陀螺仪，使用基准角度跟随上位机调用的角度变化，微调即为让其转正
 			//是上位机调用Motor_Align()函数来实现
+			MOTOR_Align();
 
 			break;
 		}			

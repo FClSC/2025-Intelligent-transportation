@@ -101,6 +101,7 @@ void OLED_W_SCL(uint8_t BitValue)
 	
 	/*如果单片机速度过快，可在此添加适量延时，以避免超出I2C通信的最大速度*/
 	//...
+	delay_us(2);
 }
 
 /**
@@ -118,6 +119,7 @@ void OLED_W_SDA(uint8_t BitValue)
 	
 	/*如果单片机速度过快，可在此添加适量延时，以避免超出I2C通信的最大速度*/
 	//...
+	delay_us(2);
 }
 
 /**

@@ -4,7 +4,7 @@
 /*********************************************
 
 
-FClSc 2025/4/2
+FClSc 2025/4/7
 
 
 
@@ -13,15 +13,15 @@ FClSc 2025/4/2
 
 1.面对新赛题，需要增加一些动作，最主要是新的物块，需要独立设计高度与爪子张开关闭的角度，3/30基本完成，未在上位机建立动作
 
-2.新扫码模块的配置，改成从一开始就开始或者变成斜的，以及小板子上新扫码模块的添加（基本完成）
+2.新扫码模块的配置，改成从一开始就开始或者变成斜的，以及小板子上新扫码模块的添加（基本完成），需要改打印件，测试正常距离
 
 3.准备比赛需要的器件和东西
 
-4.陀螺仪在流程中搞得优化，近期需要保持在3.30左右，需要尝试将陀螺仪弄成不清零的（比较重要）
+4.陀螺仪在流程中搞得优化，陀螺仪不清零已完成，亟待软件测试全程
 
 5.脉冲移动不准，修改计算
 
-6.小板子需要改成适配新的扫码模块的5V与走线
+6.小板子的关于黑色大陀螺仪的安装以及ws2812的安装测试
 
 可采用一阶低通滤波器对陀螺仪数据进行处理,以减小误差
 // 示例：一阶低通滤波
@@ -119,7 +119,8 @@ int main(void)
 	{
 
 		OLED_Printf(0,0,OLED_8X16,"Angle=%.3f",global_angle);
-		OLED_Printf(0,16,OLED_8X16,"BaseAngle=%d",base_angle);
+		OLED_Printf(0,16,OLED_8X16,"BaseAngle=");
+		OLED_ShowSignedNum(64,16,base_angle,3,OLED_8X16);
 		OLED_Printf(0,32,OLED_8X16,"Err_Angle=%.3f",global_angle-base_angle);
 		OLED_Printf(0,48,OLED_8X16,"Code=");
         OLED_Printf(64,48,OLED_8X16,UART5_RX_BUF);
@@ -128,6 +129,7 @@ int main(void)
 
 		if(Key_Get() == 1)//一键启动，如果按下，给工控机发送启动指令
 		{
+			base_angle = 0;
 			UART_SendPacket2UP(0x02);
 			UART_SendPacket2UP(0x02);
 			UART_SendPacket2UP(0x02);
