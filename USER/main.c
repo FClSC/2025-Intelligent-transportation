@@ -4,7 +4,7 @@
 /*********************************************
 
 
-FClSc 2025/4/7
+FClSc 2025/4/11
 
 
 
@@ -17,7 +17,7 @@ FClSc 2025/4/7
 
 3.准备比赛需要的器件和东西
 
-4.陀螺仪在流程中搞得优化，陀螺仪不清零已完成，亟待软件测试全程
+4.陀螺仪在流程中搞得优化，陀螺仪不清零已完成，连续旋转也可以做到，误差在0.1度以内，亟待软件测试全程
 
 5.脉冲移动不准，修改计算
 
@@ -40,6 +40,8 @@ void ParseData(uint8_t *data, uint16_t length) {
 
 *********************************************/
 
+void test(void); //测试函数
+
 int16_t base_angle = 0; //基准角度,根据上位机要求角度跟随用，比如上位机调用转90度，基准角度会加90度，反方向会减去90度
 //也就是相对于初始Z轴0度的偏角
 
@@ -54,63 +56,8 @@ int main(void)
 	delay_ms(1000);
 	claw_turn1();
 
-	// delay_ms(5000);
-
-	// base_angle +=90;
-	// stepPosition=0;		
-	// MOTOR_Angle(81);
-	// while(1)
-	// {
-	// 	if(stepPosition == angle_temp)
-	// 	{
-	// 		break;
-	// 	}
-	// }	
-	// delay_ms(100);
-	// MOTOR_Align(); //姿态矫正，陀螺仪清零
-
-	// base_angle -=90;
-	// stepPosition=0;		
-	// MOTOR_Angle(-81);
-	// while(1)
-	// {
-	// 	if(stepPosition == angle_temp)
-	// 	{
-	// 		break;
-	// 	}
-	// }	
-	// delay_ms(100);
-
-	// MOTOR_Align(); //姿态矫正，陀螺仪清零
-
-	// base_angle -=90;
-	// stepPosition=0;		
-	// MOTOR_Angle(-81);
-	// while(1)
-	// {
-	// 	if(stepPosition == angle_temp)
-	// 	{
-	// 		break;
-	// 	}
-	// }	
-	// delay_ms(100);
-
-	// MOTOR_Align(); //姿态矫正，陀螺仪清零
-
-
-	// base_angle +=90;
-	// stepPosition=0;		
-	// MOTOR_Angle(81);
-	// while(1)
-	// {
-	// 	if(stepPosition == angle_temp)
-	// 	{
-	// 		break;
-	// 	}
-	// }	
-	// delay_ms(100);
-	// MOTOR_Align(); //姿态矫正，陀螺仪清零
-
+	delay_ms(1000);
+	//test();
 
 
 
@@ -127,7 +74,7 @@ int main(void)
 		OLED_Update();
 
 
-		if(Key_Get() == 1)//一键启动，如果按下，给工控机发送启动指令
+		if(Key_Get() == 1)//一键启动，如果按下，给工控机发送启动指令，同时令目标角度为0
 		{
 			base_angle = 0;
 			UART_SendPacket2UP(0x02);
@@ -151,7 +98,40 @@ int main(void)
 
 void test(void) //测试程序
 {
-     
+	claw_get_block1();//转盘放车上
+	delay_ms(1000);
+	claw_get_block1();
+	delay_ms(1000);
+	claw_get_block1();
+	delay_ms(1000);
+
+	claw_get_block();//地上放车上
+	delay_ms(1000);
+	claw_get_block();
+	delay_ms(1000);
+	claw_get_block();
+	delay_ms(1000);
+
+	claw_put_block();//车上放地上
+	delay_ms(1000);
+	claw_put_block();
+	delay_ms(1000);
+	claw_put_block();
+	delay_ms(1000);
+
+	claw_put_blockF2();//车上放二层
+	delay_ms(1000);
+	claw_put_blockF2();
+	delay_ms(1000);
+	claw_put_blockF2();
+	delay_ms(1000);
+
+	claw_put_block2();//车上放转盘
+	delay_ms(1000);
+	claw_put_block2();
+	delay_ms(1000);
+	claw_put_block2();
+	delay_ms(1000);
 
 
 

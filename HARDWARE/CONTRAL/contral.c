@@ -418,7 +418,7 @@ void DIR2(uint8_t a)
 	}
 }
 // PA8    dir7
-void DIR3(uint8_t a)
+void DIR3(uint8_t a)  //改动过，因为这个电机方向反的
 {
 	if(a == CW)
 	{
@@ -628,7 +628,7 @@ void MOTOR_TurnRight(int angle)
 /********************
 函数功能 : 靶心识别/转弯前后进行姿态矫正(对应基准角度与全局角度的差值)
 输入参数 : 无
-输出参数 ：不进行陀螺仪清零
+输出参数 ：不进行陀螺仪清零，三次矫正，精度可达0.1度以内
 **********************/
 void MOTOR_Align(void)
 {
