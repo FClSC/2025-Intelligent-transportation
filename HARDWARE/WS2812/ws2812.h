@@ -12,7 +12,7 @@ void WS2812_Init(void);
 void WS2812_SetColor(uint8_t led_num, uint32_t grb_color);
 void WS2812_Update(void);
 void ws2812_ON(void);
-
+void ws2812_OFF(void);
 
 
 

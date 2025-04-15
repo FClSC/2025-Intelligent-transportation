@@ -634,7 +634,7 @@ void MOTOR_Align(void)
 {
     
 //180/-180情况
-    if((global_angle>150&&global_angle<180)||(global_angle<-150&&global_angle>-180)/*base_angle==180||base_angle==-180*/)
+    if(base_angle==180||base_angle==-180)//(global_angle>150&&global_angle<180)||(global_angle<-150&&global_angle>-180)
    	{
         
 		if(global_angle>0)  //转少了，要顺时针旋转纠偏
@@ -1161,6 +1161,39 @@ void uart_handle(void)
 							break;
 						}
 					}	
+					break;
+				}
+				case 0x07:  //在把物块从地上放车上的过程中边走边放
+				{
+
+					claw_turn0();
+					claw_open();
+					arrive_block_get();
+					delay_ms(200);
+					claw_close();
+					delay_ms(200);
+					arrive_most_up();//从地面抓起来物块并升到最高
+
+					stepPosition=0;   //跑
+					stepPosition1=0;  //抓
+					MOTOR_Displacement(move_mode,0);//移动到下一个需要从地上抓取物块的地方
+					claw_turn1();
+					delay_ms(500);
+					arrive_car_put();
+					while(1)
+					{
+						if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
+						{
+							break;
+						}
+					}
+		
+					claw_open1();
+					delay_ms(200);
+					arrive_most_up();	
+					support_turn120();
+					claw_open();
+
 					break;
 				}	
 

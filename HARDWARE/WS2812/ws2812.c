@@ -86,6 +86,9 @@ void WS2812_Init(void)
 
     TIM_DMACmd(TIM1, TIM_DMA_CC4, ENABLE);
     TIM_CtrlPWMOutputs(TIM1, ENABLE);
+
+    GPIO_ResetBits(GPIOA, GPIO_Pin_11);
+    delay_us(100);
 }
 
 // 设置单个LED颜色（GRB格式）
@@ -111,21 +114,37 @@ void WS2812_Update(void)
     while (!DMA_GetFlagStatus(DMA1_FLAG_TC4));
     DMA_ClearFlag(DMA1_FLAG_TC4);
 
-    // 生成复位信号（>50us低电平）
+    // 关键修复：彻底关闭 PWM 和 DMA，再拉低 GPIO
     TIM_Cmd(TIM1, DISABLE);
-    GPIO_ResetBits(GPIOA, GPIO_Pin_11);
-    delay_us(60);  // 延时60us确保复位
+    DMA_Cmd(DMA1_Channel4, DISABLE);
+    GPIO_ResetBits(GPIOA, GPIO_Pin_11); // 强制拉低数据线
+    delay_us(100);  // 延长复位时间至 100μs（确保可靠）
 }
 
-// 示例：点亮所有LED为绿色
+//0xFFFFFF 全白
+// 0xFF0000 红色
+// 0x00FF00 绿色
+// 0x0000FF 蓝色
+// 0x7F7F7F 半白
+// 示例：点亮所有LED为白色
 void ws2812_ON(void) 
 {
     for (int i = 0; i < WS2812_NUM_LEDS; i++) {
-        WS2812_SetColor(i, 0x00FF00); // GRB格式（绿色）
+        WS2812_SetColor(i, 0x7F7F7F); // GRB格式（白色）
     }
     WS2812_Update();
-    delay_ms(500);
+    delay_ms(10);
 }
+// 关闭所有 LED（灭灯）
+void ws2812_OFF(void) 
+{
+    for (int i = 0; i < WS2812_NUM_LEDS; i++) {
+        WS2812_SetColor(i, 0x000000); // GRB 全 0，关闭 LED
+    }
+    WS2812_Update(); // 发送数据到灯带
+    delay_ms(10);    // 可选，确保数据发送完成
+}
+
 
 // DMA传输完成中断服务函数（可选）
 void DMA1_Channel4_IRQHandler(void) 

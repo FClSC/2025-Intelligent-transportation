@@ -4,7 +4,7 @@
 /*********************************************
 
 
-FClSc 2025/4/11
+FClSc 2025/4/15
 
 
 
@@ -22,6 +22,31 @@ FClSc 2025/4/11
 5.脉冲移动不准，修改计算
 
 6.小板子的关于黑色大陀螺仪的安装以及ws2812的安装测试
+
+7.如果接收esp8266发送的任务码，直接等待串口即可，目前完成了UDP协议，TCP等待完成
+即为
+			while(1)//如果没有接收到数据就一直等待
+			{
+				if(Serial5_GetRxFlag() == 1)//接收到了数据就处理
+				{
+					int16_t code1 =0; 
+					int16_t code2 =0; 	
+					delay_ms(300);//等待数据接收完全
+					UART5_ParseCode(UART5_RX_BUF,&code1,&code2);//解析出二维码数据，此时UART5_BUX中依然存放的是二维码数据	
+					u2_printf("tt3.txt=\"%d+%d\"",code1,code2);//多次发送给串口屏
+					delay_ms(10);
+					u2_printf("tt3.txt=\"%d+%d\"",code1,code2);
+					delay_ms(10);
+					u2_printf("t3.txt=\"%d+%d\"",code1,code2);
+					delay_ms(10);
+					u2_printf("t3.txt=\"%d+%d\"",code1,code2);
+					delay_ms(10);
+					u2_printf("tt3.txt=\"%d+%d\"",code1,code2);
+					delay_ms(10);			
+					break;
+				}
+			}
+
 
 可采用一阶低通滤波器对陀螺仪数据进行处理,以减小误差
 // 示例：一阶低通滤波
@@ -57,6 +82,12 @@ int main(void)
 	claw_turn1();
 
 	delay_ms(1000);
+	// ws2812_ON();
+
+	// delay_s(3);
+
+	// ws2812_OFF();
+
 	//test();
 
 
