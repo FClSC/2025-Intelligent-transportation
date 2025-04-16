@@ -13,11 +13,12 @@ FClSc 2025/4/15
 
 1.面对新赛题，需要增加一些动作，最主要是新的物块，需要独立设计高度与爪子张开关闭的角度，3/30基本完成，未在上位机建立动作
 
-2.新扫码模块的配置，改成从一开始就开始或者变成斜的，以及小板子上新扫码模块的添加（基本完成），需要改打印件，测试正常距离
+2.新扫码模块的配置，改成从一开始就开始或者变成斜的，以及小板子上新扫码模块的添加（基本完成），目前偶尔会出现传给上位机没东西的情况，
+或许改为上位机调用扫码后立即问我要（以前的方式）会改变更好
 
 3.准备比赛需要的器件和东西
 
-4.陀螺仪在流程中搞得优化，陀螺仪不清零已完成，连续旋转也可以做到，误差在0.1度以内，亟待软件测试全程
+4.长距离位移爪子收起来动的动作
 
 5.脉冲移动不准，修改计算
 
@@ -81,14 +82,6 @@ int main(void)
 	delay_ms(1000);
 	claw_turn1();
 
-	delay_ms(1000);
-	// ws2812_ON();
-
-	// delay_s(3);
-
-	// ws2812_OFF();
-
-	//test();
 
 
 
@@ -114,11 +107,29 @@ int main(void)
 			UART_SendPacket2UP(0x02);		
 		}  
      
-
 		if(Serial1_GetRxFlag() == 1)//接收树莓派消息
 		{
 			uart_handle();
 			UART_SendPacket2UP(0x01);
+		}
+
+		if(Serial5_GetRxFlag() == 1)//如果接收到了扫码发来的数据就处理
+		{
+			int16_t code1 =0; 
+			int16_t code2 =0; 	
+			delay_ms(300);//等待数据接收完全
+			UART5_ParseCode(UART5_RX_BUF,&code1,&code2);//解析出二维码数据，此时UART5_BUX中依然存放的是二维码数据	
+			u2_printf("tt3.txt=\"%d+%d\"",code1,code2);//多次发送给串口屏
+			delay_ms(10);
+			u2_printf("tt3.txt=\"%d+%d\"",code1,code2);
+			delay_ms(10);
+			u2_printf("t3.txt=\"%d+%d\"",code1,code2);
+			delay_ms(10);
+			u2_printf("t3.txt=\"%d+%d\"",code1,code2);
+			delay_ms(10);
+			u2_printf("tt3.txt=\"%d+%d\"",code1,code2);
+			delay_ms(10);			
+
 		}
 		
 	}	 

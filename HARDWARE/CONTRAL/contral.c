@@ -524,7 +524,7 @@ void MOTOR_Displacement(int16_t x_cm,int16_t y_cm)
 	temp=max_Return(x_cm,y_cm);
 	//     3200        x/a = 78/3200     
 	distance=temp*130;  //输入的是cm 
-	MSD_Move(distance,20,20,40);  //17 17 40 
+	MSD_Move(distance,25,25,50);  //17 17 40 
 }
 
 
@@ -910,27 +910,27 @@ void uart_handle(void)
 		case 0x04:  //让单片机扫码
 		{
 			UART5_Start_Scan();//发送扫码指令
-			while(1)//如果没有接收到数据就一直等待
-			{
-				if(Serial5_GetRxFlag() == 1)//接收到了数据就处理
-				{
-					int16_t code1 =0; 
-					int16_t code2 =0; 	
-					delay_ms(300);//等待数据接收完全
-					UART5_ParseCode(UART5_RX_BUF,&code1,&code2);//解析出二维码数据，此时UART5_BUX中依然存放的是二维码数据	
-					u2_printf("tt3.txt=\"%d+%d\"",code1,code2);//多次发送给串口屏
-					delay_ms(10);
-					u2_printf("tt3.txt=\"%d+%d\"",code1,code2);
-					delay_ms(10);
-					u2_printf("t3.txt=\"%d+%d\"",code1,code2);
-					delay_ms(10);
-					u2_printf("t3.txt=\"%d+%d\"",code1,code2);
-					delay_ms(10);
-					u2_printf("tt3.txt=\"%d+%d\"",code1,code2);
-					delay_ms(10);			
-					break;
-				}
-			}
+			// while(1)//如果没有接收到数据就一直等待
+			// {
+			// 	if(Serial5_GetRxFlag() == 1)//接收到了数据就处理
+			// 	{
+			// 		int16_t code1 =0; 
+			// 		int16_t code2 =0; 	
+			// 		delay_ms(300);//等待数据接收完全
+			// 		UART5_ParseCode(UART5_RX_BUF,&code1,&code2);//解析出二维码数据，此时UART5_BUX中依然存放的是二维码数据	
+			// 		u2_printf("tt3.txt=\"%d+%d\"",code1,code2);//多次发送给串口屏
+			// 		delay_ms(10);
+			// 		u2_printf("tt3.txt=\"%d+%d\"",code1,code2);
+			// 		delay_ms(10);
+			// 		u2_printf("t3.txt=\"%d+%d\"",code1,code2);
+			// 		delay_ms(10);
+			// 		u2_printf("t3.txt=\"%d+%d\"",code1,code2);
+			// 		delay_ms(10);
+			// 		u2_printf("tt3.txt=\"%d+%d\"",code1,code2);
+			// 		delay_ms(10);			
+			// 		break;
+			// 	}
+			// }
 
 
 			break;
@@ -1195,7 +1195,29 @@ void uart_handle(void)
 					claw_open();
 
 					break;
-				}	
+				}
+				
+				case 0x08:  //边走边升到最高边把爪子收回去，避免长距离位移把爪子晃松
+				{
+					stepPosition=0;   //跑
+					stepPosition1=0;  //抓
+					arrive_most_up();  //升到最高
+					MOTOR_Displacement(move_mode,0);  //先厘米级别的移动
+					delay_ms(200);  //先执行跑的在执行升降的
+					claw_turn1();   //收回爪子
+
+					while(1)
+					{
+						if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
+						{
+							break;
+						}
+					}
+
+
+
+				}
+				
 
 
 				default:
