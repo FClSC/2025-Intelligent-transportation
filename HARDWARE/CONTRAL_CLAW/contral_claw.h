@@ -8,7 +8,11 @@
 转盘  物块5.5cm处爪子高度
 80mm  13.5cm 99
 
+85mm 14.0cm 105
+
 90mm 14.5cm  111
+
+95mm 15.0cm 117
 
 100mm 15.5cm 123
 
@@ -26,7 +30,7 @@
 
 #define put_block_down   4       //      地上放物块的高度28
 
-#define claw_block_get1  103    //     从物料转盘上抓物块的高度
+extern int16_t claw_block_get1 ;    //     从物料转盘上抓物块的高度    需要进行更改的，设为变量，可以软件进行修改
 
 #define claw_block_put   135 //        车上放物块的位置
 

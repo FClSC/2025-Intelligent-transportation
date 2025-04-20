@@ -1017,7 +1017,7 @@ void uart_handle(void)
 		}
         case 0x0A:
 		{
-          claw_put_blockF2(); //物块从车上放二层
+         	claw_put_blockF2(); //物块从车上放二层
 		  break;
 		}
 		
@@ -1186,6 +1186,7 @@ void uart_handle(void)
 						{
 							break;
 						}
+						
 					}
 		
 					claw_open1();
@@ -1197,15 +1198,26 @@ void uart_handle(void)
 					break;
 				}
 				
-				case 0x08:  //边走边升到最高边把爪子收回去，避免长距离位移把爪子晃松
+				case 0x08:  //从圆盘抓完物块直接收回爪子离开
 				{
+
+					claw_turn0();
+					arrive_block_get1();
+					delay_ms(200);
+					claw_close();
+					delay_ms(200);
+
 					stepPosition=0;   //跑
 					stepPosition1=0;  //抓
 					arrive_most_up();  //升到最高
 					MOTOR_Displacement(move_mode,0);  //先厘米级别的移动
-					delay_ms(200);  //先执行跑的在执行升降的
 					claw_turn1();   //收回爪子
-
+					delay_ms(400);
+					arrive_car_put();
+					claw_open1();
+					delay_ms(200);
+					arrive_most_up();
+					support_turn120();
 					while(1)
 					{
 						if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
@@ -1214,8 +1226,42 @@ void uart_handle(void)
 						}
 					}
 
+					break;
 
+				}
 
+				case 0x09:  //二层码垛完最后一个后直接收回爪子离开--用于第二轮最后归库
+				{
+					arrive_most_up();
+					claw_open1();       
+					claw_turn1();
+					delay_ms(600);
+					arrive_car_get();
+					claw_close();
+					delay_ms(300);	
+					arrive_most_up(); 
+					delay_ms(200);
+					claw_turn0();
+					delay_ms(300);
+					arrive_put_down2();
+					delay_ms(200);	
+					claw_open();
+					delay_ms(300);
+					arrive_most_up();//放置物块流程
+                    //离开并收回爪子
+					MOTOR_Displacement(move_mode,0);  //先厘米级别的移动
+					delay_ms(200);  //先执行跑的在执行升降的
+					claw_turn1();   //收回爪子
+					support_turn120();
+					while(1)
+					{
+						if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
+						{
+							break;
+						}
+					}
+
+					break;
 				}
 				
 
@@ -1274,12 +1320,47 @@ void uart_handle(void)
             claw_put2_block2();
 			 break;
 		}
-		case 0x26: 
+		case 0x26:  //边旋转边把爪子转到正面且下降到靶心识别高度，后面需要纠偏
 		{
+			angle = Serial_RXPacket[3];
+			stepPosition=0;   //转
+			stepPosition1=0;  //升降
+			MOTOR_Angle(angle);
+			claw_turn0();
+			delay_ms(200);  //先执行跑的在执行升降的
+			arrive_circle_capture();  //这个是靶心识别高度
+			while(1)
+			{
+				if((stepPosition == angle_temp)&&(stepPosition1 == distance1))   //两个都完成
+				{
+					break;
+				}
+			}
 
+			if(angle>0)base_angle+=90; 
+			else base_angle-=90;
+
+			if(base_angle>180)//270
+			{
+				base_angle=-90;
+			}
+			else if(base_angle<-180)//-270
+			{
+				base_angle=90; 
+			}
+
+            delay_ms(100);
+
+			 break;
+		
+		}
+        case 0x27:   //上位机修改转盘上抓取的高度
+		{
+			x_dis = Serial_RXPacket[1];
+			claw_block_get1 = 99+(x_dis-80)/20*24;  //修改转盘上抓取的高度
+			
 			break;
 		}
-
 		case 0x30 :
 		{
 		arrive_most_up();
@@ -1512,7 +1593,7 @@ void claw_close2(void)
 **********************/
 void claw_open1(void)
 {
-		servo_angle2=74;
+		servo_angle2=73;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);

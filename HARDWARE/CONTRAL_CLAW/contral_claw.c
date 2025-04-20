@@ -1,6 +1,9 @@
 #include "contral_claw.h"
 
 CLAW_POSITION claw;
+
+int16_t claw_block_get1 = 103 ;
+
 /********************
 函数功能 : 爪子位置函数  单位mm
 输入参数 : 无
@@ -34,7 +37,7 @@ void claw_position(int16_t position)
 		pulse=(64*position);
 		distance1=pulse;
 		stepPosition1=0;
-		MSD_Move1(pulse,140,140,220); //24 24 30
+		MSD_Move1(pulse,170,170,220); //24 24 30
 		while(1)
 		{
 			if(stepPosition1 == distance1)
@@ -308,13 +311,13 @@ void claw_get_block(void)
 	arrive_block_get();
 	delay_ms(200);
 	claw_close();
-	delay_ms(200);
+	delay_ms(300);
 	arrive_most_up();
 	claw_turn1();
-	delay_ms(500);
+	delay_ms(400);
 	arrive_car_put();
 	claw_open1();
-	delay_ms(200);
+//	delay_ms(200);
 	arrive_most_up();	
 	support_turn120();
 	claw_open();
@@ -335,7 +338,7 @@ void claw_get_block1(void)
 	delay_ms(200);
 	arrive_most_up();
 	claw_turn1();
-	delay_ms(600);
+	delay_ms(400);
 	arrive_car_put();
 	claw_open1();
 	delay_ms(200);
@@ -372,7 +375,7 @@ void claw_put_block(void)
 	arrive_block_put();
 	delay_ms(200);	
 	claw_open();
-	arrive_most_up();
+	arrive_circle_capture();
 	support_turn120();
 	
 }
