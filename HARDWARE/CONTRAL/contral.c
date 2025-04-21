@@ -1191,9 +1191,9 @@ void uart_handle(void)
 		
 					claw_open1();
 					delay_ms(200);
-					arrive_most_up();	
-					support_turn120();
+					arrive_most_up();
 					claw_open();
+					support_turn120();
 
 					break;
 				}
@@ -1247,12 +1247,13 @@ void uart_handle(void)
 					delay_ms(200);	
 					claw_open();
 					delay_ms(300);
+					stepPosition=0;  //跑
+					stepPosition1=0; //抓 
 					arrive_most_up();//放置物块流程
-                    //离开并收回爪子
-					MOTOR_Displacement(move_mode,0);  //先厘米级别的移动
-					delay_ms(200);  //先执行跑的在执行升降的
-					claw_turn1();   //收回爪子
-					support_turn120();
+					MOTOR_Displacement(move_mode,0); //先厘米级别的移动
+					//先执行跑的在执行升降的
+					delay_ms(200);
+					claw_turn1();  //收回爪子
 					while(1)
 					{
 						if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
@@ -1327,6 +1328,8 @@ void uart_handle(void)
 			stepPosition1=0;  //升降
 			MOTOR_Angle(angle);
 			claw_turn0();
+			delay_ms(200);
+			claw_open();
 			delay_ms(200);  //先执行跑的在执行升降的
 			arrive_circle_capture();  //这个是靶心识别高度
 			while(1)
@@ -1593,7 +1596,7 @@ void claw_close2(void)
 **********************/
 void claw_open1(void)
 {
-		servo_angle2=73;
+		servo_angle2=71;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
@@ -1682,7 +1685,7 @@ void claw_turn5(void)
 **********************/
 void support_turn120(void)
 {
-	MSD_Move2(1067,7,7,14);
+	MSD_Move2(1067,6,6,12);
 }
 void support_turn35(void)
 {

@@ -106,6 +106,8 @@ int main(void)
 	delay_ms(1000);
 	claw_turn1();
 
+	
+
 	// claw_get_block();//地上放车上
 	// delay_ms(1000);
 	// claw_get_block();
@@ -217,9 +219,9 @@ int main(void)
 		OLED_Printf(0,48,OLED_8X16,"Code=");
         OLED_Printf(64,48,OLED_8X16,UART5_RX_BUF);
 		OLED_Update();
+	
 
-
-		if(Key_Get() == 1)//一键启动，如果按下，给工控机发送启动指令，同时令目标角度为0
+		if(Key_Get() == 1)//一键启动，如果按下，给工控机发送启动指令，同时令目标角度和串口屏显示为0
 		{
 			base_angle = 0;
 			// arrive_camera();//最低高度
@@ -236,7 +238,7 @@ int main(void)
 			UART_SendPacket2UP(0x02);
 			UART_SendPacket2UP(0x02);
 			UART_SendPacket2UP(0x02);
-			UART_SendPacket2UP(0x02);		
+			UART_SendPacket2UP(0x02);	
 		}  
      
 		if(Serial1_GetRxFlag() == 1)//接收树莓派消息

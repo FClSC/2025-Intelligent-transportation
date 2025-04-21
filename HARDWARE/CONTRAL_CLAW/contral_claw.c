@@ -446,6 +446,26 @@ void claw_put_block2(void)
 输入参数 : 无
 输出参数 ：无
 **********************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void claw_get2_block(void)
 {
 	claw_turn0();
