@@ -1047,6 +1047,11 @@ void uart_handle(void)
 					arrive_circle_capture2();   //识别二层码垛的高度
 					break;
 				}
+				case 0x05:
+				{
+					arrive_most_up();   //
+					break;
+				}
 				default :
 				{
                     break ;
@@ -1235,7 +1240,7 @@ void uart_handle(void)
 					arrive_most_up();
 					claw_open1();       
 					claw_turn1();
-					delay_ms(600);
+					delay_ms(400);
 					arrive_car_get();
 					claw_close();
 					delay_ms(300);	
@@ -1245,15 +1250,15 @@ void uart_handle(void)
 					delay_ms(300);
 					arrive_put_down2();
 					delay_ms(200);	
-					claw_open();
+					claw_open1();
 					delay_ms(300);
 					stepPosition=0;  //跑
 					stepPosition1=0; //抓 
 					arrive_most_up();//放置物块流程
 					MOTOR_Displacement(move_mode,0); //先厘米级别的移动
-					//先执行跑的在执行升降的
-					delay_ms(200);
 					claw_turn1();  //收回爪子
+					claw_open1();  
+					support_turn120(); 
 					while(1)
 					{
 						if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
@@ -1263,6 +1268,15 @@ void uart_handle(void)
 					}
 
 					break;
+				}
+
+				case 0x0A:  //  从车上放物块到二层
+				{
+
+
+
+
+
 				}
 				
 
