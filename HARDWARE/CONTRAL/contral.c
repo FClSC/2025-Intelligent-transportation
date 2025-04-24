@@ -12,6 +12,8 @@ uint8_t servo_angle2;
 uint16_t servo_angle3;
 
 extern int16_t base_angle; 
+extern int16_t code1 ;
+extern int16_t code2 ; 	
 
 
 
@@ -1237,16 +1239,17 @@ void uart_handle(void)
 
 				case 0x09:  //二层码垛完最后一个后直接收回爪子离开--用于第二轮最后归库
 				{
-					arrive_most_up();
+		
 					claw_open1();       
 					claw_turn1();
-					delay_ms(400);
+					delay_ms(500);
 					arrive_car_get();
 					claw_close();
 					delay_ms(300);	
 					arrive_most_up(); 
 					delay_ms(200);
 					claw_turn0();
+					support_turn120();
 					delay_ms(300);
 					arrive_put_down2();
 					delay_ms(200);	
@@ -1256,9 +1259,12 @@ void uart_handle(void)
 					stepPosition1=0; //抓 
 					arrive_most_up();//放置物块流程
 					MOTOR_Displacement(move_mode,0); //先厘米级别的移动
-					claw_turn1();  //收回爪子
-					claw_open1();  
-					support_turn120(); 
+					claw_open1();
+					claw_turn1();  //收回爪子					
+					delay_ms(500);					
+					arrive_car_get();
+					
+					
 					while(1)
 					{
 						if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
@@ -1275,7 +1281,7 @@ void uart_handle(void)
 
 
 
-
+					break;
 
 				}
 				
@@ -1374,32 +1380,43 @@ void uart_handle(void)
         case 0x27:   //上位机修改转盘上抓取的高度
 		{
 			x_dis = Serial_RXPacket[1];
-			claw_block_get1 = 99+(x_dis-80)/20*24;  //修改转盘上抓取的高度
+			claw_block_get1 = 99+(x_dis-80.0)/20*24;  //修改转盘上抓取的高度
 			
 			break;
 		}
 		case 0x30 :
 		{
-		arrive_most_up();
+			arrive_most_up();
 			break;
 		}
 		case 0x31 :
 		{
-		arrive_block_get();
+			arrive_block_get();
 				break;
 		}
 		case 0x32 :
 		{
-		claw_turn0();
+			claw_turn0();
 				break;
 		}
 
 		case 0x36 ://54
 		{
 			UART1_SendString(UART5_RX_BUF);  //给树莓派发送二维码信息
-			int16_t code1 =0; 
-			int16_t code2 =0; 	
+
 			UART5_ParseCode(UART5_RX_BUF,&code1,&code2);//解析出二维码数据，此时UART5_BUX中依然存放的是二维码数据	
+
+			// unsigned char data[8] ;
+			// data[0]=0xAB;
+			// data[1]= code1/100;
+			// data[2]= (code1/10)%10;
+			// data[3]= (code1)%10;
+			// data[4]= code2/100;
+			// data[5]= (code2/10)%10;
+			// data[6]= (code2)%10;
+			// data[7]=0xCD;
+			// UART1_SendArray(data,8);
+
 			u2_printf("tt3.txt=\"%d+%d\"",code1,code2);//多次发送给串口屏
 			delay_ms(10);
 			u2_printf("tt3.txt=\"%d+%d\"",code1,code2);
@@ -1595,7 +1612,7 @@ void claw_close(void)
 **********************/
 void claw_close2(void)
 {
-		servo_angle2=73;
+		servo_angle2=95;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
@@ -1610,7 +1627,7 @@ void claw_close2(void)
 **********************/
 void claw_open1(void)
 {
-		servo_angle2=71;
+		servo_angle2=70;    //71
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);
