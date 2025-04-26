@@ -1664,7 +1664,7 @@ void claw_turn129(void)
 **********************/
 void claw_turn1(void)
 {
-		servo_angle3 = 162;
+		servo_angle3 = 162;   //   建议改成161
 		SERVO3_CONTRAL(servo_angle3);
 }
 /********************

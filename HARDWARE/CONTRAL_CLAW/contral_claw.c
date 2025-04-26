@@ -2,7 +2,7 @@
 
 CLAW_POSITION claw;
 
-int16_t claw_block_get1 = 103 ;
+int16_t claw_block_get1 = 103 ;   //103
 
 /********************
 函数功能 : 爪子位置函数  单位mm
@@ -446,26 +446,6 @@ void claw_put_block2(void)
 输入参数 : 无
 输出参数 ：无
 **********************/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void claw_get2_block(void)
 {
 	claw_turn0();
@@ -616,6 +596,7 @@ void claw_put2_block2(void)
 void claw_home(void)
 {
 	arrive_most_up();
+	claw_turn1();
 	delay_ms(300);  
 	claw_turn1();
 }
