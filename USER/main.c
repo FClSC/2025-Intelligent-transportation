@@ -10,7 +10,7 @@ FClSc 2025/4/26
 
 即将进行创新实践环节：
 
-注意扫码
+注意扫码,把扫码换成摄像头扫码
 
 
 
@@ -63,9 +63,10 @@ void ParseData(uint8_t *data, uint16_t length) {
 *********************************************/
 
 void test(void); //测试函数
-
-int16_t base_angle = 0; //基准角度,根据上位机要求角度跟随用，比如上位机调用转90度，基准角度会加90度，反方向会减去90度
 //也就是相对于初始Z轴0度的偏角
+int16_t base_angle = 0; //基准角度,根据上位机要求角度跟随用，比如上位机调用转90度，基准角度会加90度，反方向会减去90度
+
+//获得扫码信息，全局变量
 int16_t code1 =0; 
 int16_t code2 =0; 	
 
@@ -79,109 +80,12 @@ int main(void)
 	arrive_most_up();
 	delay_ms(1000);
 	claw_turn1();
+	claw_close();
 
-	
+	//claw_open();
 
-	
-	// claw_get_block();//地上放车上
-	// delay_ms(1000);
-	// claw_get_block();
-	// delay_ms(1000);
-	// claw_get_block();
-	// delay_ms(1000);
+	//test();
 
-	// claw_put_block();//车上放地上
-	// delay_ms(1000);
-	// claw_put_block();
-	// delay_ms(1000);
-	// claw_put_block();
-	// delay_ms(1000);
-
-	// claw_put_blockF2();//车上放二层
-	// delay_ms(1000);
-	// claw_put_blockF2();
-	// delay_ms(1000);
-	// claw_put_blockF2();
-	// delay_ms(1000);
-
-    
-	
-
-
-// //圆盘抓跑
-// 		claw_turn0();
-// 		arrive_block_get1();
-// 		delay_ms(200);
-// 		claw_close();
-// 		delay_ms(200);
-
-// 		stepPosition=0;   //跑
-// 		stepPosition1=0;  //抓
-// 		arrive_most_up();  //升到最高
-// 		MOTOR_Displacement(30,0);  //先厘米级别的移动
-// 		claw_turn1();   //收回爪子
-// 		delay_ms(400);
-// 		arrive_car_put();
-// 		claw_open1();
-// 		delay_ms(200);
-// 		arrive_most_up();
-// 		support_turn120();
-// 		while(1)
-// 		{
-// 			if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
-// 			{
-// 				break;
-// 			}
-// 		}
-
-// //码垛，收跑
-// 		arrive_most_up();
-// 		claw_open1();       
-// 		claw_turn1();
-// 		delay_ms(600);
-// 		arrive_car_get();
-// 		claw_close();
-// 		delay_ms(300);	
-// 		arrive_most_up(); 
-// 		delay_ms(200);
-// 		claw_turn0();
-// 		delay_ms(300);
-// 		arrive_put_down2();
-// 		delay_ms(200);	
-// 		claw_open();
-// 		delay_ms(300);
-// 		arrive_most_up();
-// 		//放置物块流程
-// 		//离开并收回爪子
-// 		MOTOR_Displacement(50,0);  //先厘米级别的移动
-// 		delay_ms(200);  //先执行跑的在执行升降的
-// 		claw_turn1();   //收回爪子
-// 		support_turn120();
-// 		while(1)
-// 		{
-// 			if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
-// 			{
-// 				break;
-// 			}
-// 		}
-
-// 		delay_ms(2000); //等待2秒钟，给上位机发送数据
-
-// //边旋转边转爪子
-// 			stepPosition=0;   //转
-// 			stepPosition1=0;  //升降
-// 			MOTOR_Angle(81);
-// 			delay_ms(200);  //
-// 			claw_turn0();
-// 			delay_ms(200);  //先执行跑的在执行升降的
-// 			arrive_circle_capture();  //这个是靶心识别高度
-// 			while(1)
-// 			{
-// 				if((stepPosition == angle_temp)&&(stepPosition1 == distance1))   //两个都完成
-// 				{
-// 					break;
-// 				}
-// 			}
 	
 
 	while(1)              //主代码
@@ -229,7 +133,7 @@ int main(void)
 			UART5_ParseCode(UART5_RX_BUF,&code1,&code2);//解析出二维码数据，此时UART5_BUX中依然存放的是二维码数据	
 			u2_printf("tt3.txt=\"%d+%d\"",code1,code2);//多次发送给串口屏
 			delay_ms(10);
-			u2_printf("tt3.txt=\"%d+%d\"",code1,code2);
+			u2_printf("tt3.txt=\"%d+%d\"",code1,code2); 
 			delay_ms(10);
 			u2_printf("t3.txt=\"%d+%d\"",code1,code2);
 			delay_ms(10);
@@ -248,33 +152,126 @@ int main(void)
 
 void test(void) //测试程序
 {
-	claw_get_block1();//转盘放车上
-	delay_ms(1000);
-	claw_get_block1();
-	delay_ms(1000);
-	claw_get_block1();
-	delay_ms(1000);
+	// claw_get_block1();//转盘放车上
+	// delay_ms(1000);
+	// claw_get_block1();
+	// delay_ms(1000);
+	// claw_get_block1();
+	// delay_ms(1000);
 
-	claw_get_block();//地上放车上
-	delay_ms(1000);
-	claw_get_block();
-	delay_ms(1000);
-	claw_get_block();
-	delay_ms(1000);
+	// claw_get_block();//地上放车上，混动    1111
+	// delay_ms(1000);
+	// claw_get_block();
+	// delay_ms(1000);
+	// claw_get_block();
+	// delay_ms(1000);
 
-	claw_put_block();//车上放地上
-	delay_ms(1000);
-	claw_put_block();
-	delay_ms(1000);
-	claw_put_block();
-	delay_ms(1000);
+/////////////////////////////////////
+	// claw_turn0();
+	// claw_open();
+	// arrive_block_get();
+	// delay_ms(400);
+	// claw_close();
+	// delay_ms(400);
+	// arrive_most_up();//从地面抓起来物块并升到最高
 
-	claw_put_blockF2();//车上放二层
-	delay_ms(1000);
-	claw_put_blockF2();
-	delay_ms(1000);
-	claw_put_blockF2();
-	delay_ms(1000);
+	// stepPosition=0;   //跑
+	// stepPosition1=0;  //抓
+	// MOTOR_Displacement(10,0);//移动到下一个需要从地上抓取物块的地方
+	// claw_turn1();
+	// delay_ms(600);
+	// arrive_car_put();
+	// while(1)
+	// {
+	// 	if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
+	// 	{
+	// 		break;
+	// 	}
+		
+	// }
+
+	// claw_open1();
+	// delay_ms(300);
+	// arrive_most_up();
+	// claw_open();
+	// support_turn120();
+
+	// delay_ms(1000);
+
+	// claw_turn0();
+	// claw_open();
+	// arrive_block_get();
+	// delay_ms(400);
+	// claw_close();
+	// delay_ms(400);
+	// arrive_most_up();//从地面抓起来物块并升到最高
+
+	// stepPosition=0;   //跑
+	// stepPosition1=0;  //抓
+	// MOTOR_Displacement(10,0);//移动到下一个需要从地上抓取物块的地方
+	// claw_turn1();
+	// delay_ms(600);
+	// arrive_car_put();
+	// while(1)
+	// {
+	// 	if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
+	// 	{
+	// 		break;
+	// 	}
+		
+	// }
+
+	// claw_open1();
+	// delay_ms(300);
+	// arrive_most_up();
+	// claw_open();
+	// support_turn120();
+
+	// delay_ms(1000);
+
+	// claw_turn0();
+	// claw_open();
+	// arrive_block_get();
+	// delay_ms(400);
+	// claw_close();
+	// delay_ms(400);
+	// arrive_most_up();//从地面抓起来物块并升到最高
+
+	// stepPosition=0;   //跑
+	// stepPosition1=0;  //抓
+	// MOTOR_Displacement(10,0);//移动到下一个需要从地上抓取物块的地方
+	// claw_turn1();
+	// delay_ms(600);
+	// arrive_car_put();
+	// while(1)
+	// {
+	// 	if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
+	// 	{
+	// 		break;
+	// 	}
+		
+	// }
+
+	// claw_open1();
+	// delay_ms(300);
+	// arrive_most_up();
+	// claw_open();
+	// support_turn120();
+////////////////////////////////////
+
+	// claw_put_block();//车上放地上  222222
+	// delay_ms(1000);
+	// claw_put_block();
+	// delay_ms(1000);
+	// claw_put_block();
+	// delay_ms(1000);
+
+	// claw_put_blockF2();//车上放二层
+	// delay_ms(1000);
+	// claw_put_blockF2();
+	// delay_ms(1000);
+	// claw_put_blockF2();
+	// delay_ms(1000);
 
 	claw_put_block2();//车上放转盘
 	delay_ms(1000);
@@ -282,6 +279,66 @@ void test(void) //测试程序
 	delay_ms(1000);
 	claw_put_block2();
 	delay_ms(1000);
+
+
+///车上码二层
+
+
+	arrive_most_up();
+	claw_open1();       
+	claw_turn1();
+	delay_ms(600);
+	arrive_car_get();
+	claw_close();
+	delay_ms(300);	
+	arrive_most_up(); 
+	delay_ms(200);
+	claw_turn0();
+	delay_ms(300);
+	arrive_block_putF2();//和抓物料的高度一样先
+	delay_ms(500);	
+	claw_open();
+	delay_ms(300);
+	arrive_most_up();
+	support_turn120();
+
+	arrive_most_up();
+	claw_open1();       
+	claw_turn1();
+	delay_ms(600);
+	arrive_car_get();
+	claw_close();
+	delay_ms(300);	
+	arrive_most_up(); 
+	delay_ms(200);
+	claw_turn0();
+	delay_ms(300);
+	arrive_block_putF2();//和抓物料的高度一样先
+	delay_ms(500);	
+	claw_open();
+	delay_ms(300);
+	arrive_most_up();
+	support_turn120();
+
+	arrive_most_up();
+	claw_open1();       
+	claw_turn1();
+	delay_ms(600);
+	arrive_car_get();
+	claw_close();
+	delay_ms(300);	
+	arrive_most_up(); 
+	delay_ms(200);
+	claw_turn0();
+	delay_ms(300);
+	arrive_block_putF2();//和抓物料的高度一样先
+	delay_ms(500);	
+	claw_open();
+	delay_ms(300);
+	arrive_most_up();
+	support_turn120();
+
+
 
 
 

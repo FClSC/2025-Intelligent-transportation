@@ -526,7 +526,7 @@ void MOTOR_Displacement(int16_t x_cm,int16_t y_cm)
 	temp=max_Return(x_cm,y_cm);
 	//     3200        x/a = 78/3200     
 	distance=temp*130;  //输入的是cm 
-	MSD_Move(distance,25,25,50);  //17 17 40 
+	MSD_Move(distance,25,25,45);  //17 17 40 
 }
 
 
@@ -937,6 +937,26 @@ void uart_handle(void)
 
 			break;
 		}	
+
+		case 0x28:  //接收上位机发过来的扫码信息（摄像头）
+		{
+			code1 = (Serial_RXPacket[4]<<8) + Serial_RXPacket[5];
+			code2 = (Serial_RXPacket[6]<<8) + Serial_RXPacket[7];
+			u2_printf("t3.txt=\"%d+%d\"",code1,code2);
+			delay_ms(10);
+			u2_printf("tt3.txt=\"%d+%d\"",code1,code2);
+			delay_ms(10);
+			u2_printf("tt3.txt=\"%d+%d\"",code1,code2);
+			delay_ms(10);
+			u2_printf("t3.txt=\"%d+%d\"",code1,code2);
+			delay_ms(10);
+			u2_printf("t3.txt=\"%d+%d\"",code1,code2);
+			delay_ms(10);
+
+			break;
+		}
+
+
 		case 0x05:  //靶心识别x方向
 		{
 			x_mdis = Serial_RXPacket[1];
@@ -1069,7 +1089,7 @@ void uart_handle(void)
 			
 			switch(claw_mode)
 			{
-				case 0x01:  //到达二维码，现在不需要这个东西，换扫码模块了
+				case 0x01:  //到达二维码，现在不需要这个东西，4/26，我觉得有必要换摄像头扫码了
 				{	
 					stepPosition=0;   //跑
 					stepPosition1=0;  //抓
@@ -1170,22 +1190,22 @@ void uart_handle(void)
 					}	
 					break;
 				}
-				case 0x07:  //在把物块从地上放车上的过程中边走边放
+				case 0x07:  //在把物块1从地上放车上的过程中边走边放
 				{
 
 					claw_turn0();
 					claw_open();
 					arrive_block_get();
-					delay_ms(200);
+					delay_ms(400);
 					claw_close();
-					delay_ms(200);
+					delay_ms(400);
 					arrive_most_up();//从地面抓起来物块并升到最高
 
 					stepPosition=0;   //跑
 					stepPosition1=0;  //抓
 					MOTOR_Displacement(move_mode,0);//移动到下一个需要从地上抓取物块的地方
 					claw_turn1();
-					delay_ms(500);
+					delay_ms(600);
 					arrive_car_put();
 					while(1)
 					{
@@ -1197,7 +1217,7 @@ void uart_handle(void)
 					}
 		
 					claw_open1();
-					delay_ms(200);
+					delay_ms(300);
 					arrive_most_up();
 					claw_open();
 					support_turn120();
@@ -1276,12 +1296,36 @@ void uart_handle(void)
 					break;
 				}
 
-				case 0x0A:  //  从车上放物块到二层
+				case 0x0A:  //  从地上把物块2放到车上边抓边走
 				{
+					claw_turn0();
+					claw_open();
+					arrive_block2_get();
+					delay_ms(200);
+					claw_close2();
+					delay_ms(200);
+					arrive_most_up();//从地面抓起来物块并升到最高
 
-
-
-					break;
+					stepPosition=0;   //跑
+					stepPosition1=0;  //抓
+					MOTOR_Displacement(move_mode,0);//移动到下一个需要从地上抓取物块的地方
+					claw_turn1();
+					delay_ms(500);
+					arrive_car2_put();
+					while(1)
+					{
+						if((stepPosition == distance)&&(stepPosition1 == distance1))   //两个都完成
+						{
+							break;
+						}
+						
+					}
+		
+					claw_open1();
+					delay_ms(200);
+					arrive_most_up();
+					claw_open();
+					support_turn120();
 
 				}
 				
@@ -1377,6 +1421,44 @@ void uart_handle(void)
 			 break;
 		
 		}
+		case 0x29:     //边旋转边把爪子转到正面且下降到转盘识别高度，后面需要纠偏
+		{
+			angle = Serial_RXPacket[3];
+			stepPosition=0;   //转
+			stepPosition1=0;  //升降
+			MOTOR_Angle(angle);
+			claw_turn0();
+			delay_ms(200);
+			claw_open();
+			delay_ms(200);  //先执行跑的在执行升降的
+			arrive_color_reco();  //这个是转盘识别颜色
+			while(1)
+			{
+				if((stepPosition == angle_temp)&&(stepPosition1 == distance1))   //两个都完成
+				{
+					break;
+				}
+			}
+
+			if(angle>0)base_angle+=90; 
+			else base_angle-=90;
+
+			if(base_angle>180)//270
+			{
+				base_angle=-90;
+			}
+			else if(base_angle<-180)//-270
+			{
+				base_angle=90; 
+			}
+
+            delay_ms(100);
+
+
+			break;
+
+		}
+
         case 0x27:   //上位机修改转盘上抓取的高度
 		{
 			x_dis = Serial_RXPacket[1];
@@ -1430,8 +1512,26 @@ void uart_handle(void)
 
 			break;
 		}
-		case 0x34 :
+		case 0x34 : //转盘上二层码垛
 		{
+			arrive_most_up();
+			claw_open1();       
+			claw_turn1();
+			delay_ms(600);
+			arrive_car_get();
+			claw_close();
+			delay_ms(300);	
+			arrive_most_up(); 
+			delay_ms(200);
+			claw_turn0();
+			delay_ms(300);
+			arrive_block_putF2();//和抓物料的高度一样先
+			delay_ms(500);	
+			claw_open();
+			delay_ms(300);
+			arrive_most_up();
+			support_turn120();
+
 
 			break;
 		}
@@ -1598,7 +1698,7 @@ void claw_open(void)
 **********************/
 void claw_close(void)
 {
-		servo_angle2=95;
+		servo_angle2=130;
 		SERVO2_CONTRAL(servo_angle2);
 		delay_ms(25);
 		SERVO2_CONTRAL(servo_angle2);

@@ -179,6 +179,20 @@ void arrive_block_get1(void)
 	claw_position(claw.position_temp);
 }
 
+/********************
+函数功能 : 到达从物料盘抓物块的高度
+输入参数 : 无
+输出参数 ：无
+**********************/
+void arrive_block_putF2(void)
+{
+	claw.position_target = claw_block_putF2;
+	claw.position_temp = claw.position_target - claw.position_now;
+	claw_position(claw.position_temp);
+}
+
+
+
 //////
 
 /********************
@@ -309,12 +323,12 @@ void claw_get_block(void)
 	claw_turn0();
 	claw_open();
 	arrive_block_get();
-	delay_ms(200);
-	claw_close();
 	delay_ms(300);
+	claw_close();
+	delay_ms(400);
 	arrive_most_up();
 	claw_turn1();
-	delay_ms(400);
+	delay_ms(600);
 	arrive_car_put();
 	claw_open1();
 //	delay_ms(200);
@@ -369,7 +383,7 @@ void claw_put_block(void)
 	claw_close();
 	delay_ms(200);
 	arrive_most_up(); 
-    delay_ms(100);
+    delay_ms(200);
 	claw_turn0();
     delay_ms(200);
 	arrive_block_put();
@@ -596,7 +610,7 @@ void claw_put2_block2(void)
 void claw_home(void)
 {
 	arrive_most_up();
-	claw_turn1();
+	claw_open();
 	delay_ms(300);  
 	claw_turn1();
 }

@@ -26,9 +26,9 @@
 #define circle_capture2  114    //ÎïÁÏÅÌÑÕÉ«Ê¶±ğÎ»ÖÃ£¬Òª¸ßÓÚµÈ»á×¥È¡Îï¿éµÄ¸ß¶È
 
 //ÆÕÍ¨¾­µäÎï¿é
-#define claw_block_get    4      //      µØÉÏ×¥Îï¿éµÄ¸ß¶È  28
+#define claw_block_get    6      //      µØÉÏ×¥Îï¿éµÄ¸ß¶È  4
 
-#define put_block_down   4       //      µØÉÏ·ÅÎï¿éµÄ¸ß¶È28
+#define put_block_down   6       //      µØÉÏ·ÅÎï¿éµÄ¸ß¶È  4
 
 extern int16_t claw_block_get1 ;    //     ´ÓÎïÁÏ×ªÅÌÉÏ×¥Îï¿éµÄ¸ß¶È    ĞèÒª½øĞĞ¸ü¸ÄµÄ£¬ÉèÎª±äÁ¿£¬¿ÉÒÔÈí¼ş½øĞĞĞŞ¸Ä
 
@@ -37,6 +37,8 @@ extern int16_t claw_block_get1 ;    //     ´ÓÎïÁÏ×ªÅÌÉÏ×¥Îï¿éµÄ¸ß¶È    ĞèÒª½øĞĞ¸
 #define get_block_down    132   //       ´Ó³µÉÏ×¥È¡Òª°ÑÎï¿é·ÅÏÂÈ¥µÄÎ»ÖÃ
 
 #define put_block_down2   87   //     °ÑÎï¿éµş·ÅÔÚ¶ş²ãµÄ¸ß¶È
+
+#define claw_block_putF2  165    //³µÉÏ°ÑÎï¿é·Åµ½×ªÅÌ¶ş²ãµÄ¸ß¶È
 
 //¾öÈüÎï¿é
 #define claw_block2_get    4      //      µØÉÏ×¥Îï¿é2µÄ¸ß¶È  28
@@ -79,6 +81,7 @@ void arrive_block_get1(void);
 void arrive_car_put(void);
 void arrive_car_get(void);
 void arrive_put_down2(void);
+void arrive_block_putF2(void);
 
 void arrive_block2_get(void);
 void arrive_block2_put(void);
